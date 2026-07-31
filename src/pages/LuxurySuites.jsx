@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import {
@@ -44,6 +45,141 @@ const PullQuote = styled.p`
   }
 `;
 
+const Scene = styled.div`
+  position: relative;
+  height: 620px;
+  border-radius: ${({ theme }) => theme.radius};
+  overflow: hidden;
+  @media (max-width: 768px) {
+    height: 480px;
+  }
+`;
+
+const SceneImage = styled.div`
+  position: absolute;
+  inset: 0;
+  background: url('${({ $src }) => $src}') center 30% / cover no-repeat;
+`;
+
+const SceneTint = styled.div`
+  position: absolute;
+  inset: 0;
+  background: ${({ $tint }) => $tint};
+  transition: background 1.6s ease;
+`;
+
+const SceneVignette = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4, 13, 15, 0.28) 0%, rgba(4, 13, 15, 0) 42%, rgba(4, 13, 15, 0.5) 100%);
+`;
+
+const SceneCaption = styled.div`
+  position: absolute;
+  left: 40px;
+  bottom: 40px;
+  z-index: 2;
+  max-width: 460px;
+  animation: sceneRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  @keyframes sceneRise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @media (max-width: 768px) {
+    left: 24px;
+    bottom: 24px;
+  }
+`;
+
+const SceneClock = styled.div`
+  font-family: ${({ theme }) => theme.fonts.ui};
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  color: ${({ theme }) => theme.colors.gold};
+  margin-bottom: 12px;
+`;
+
+const SceneLine = styled.p`
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: clamp(20px, 2.4vw, 28px);
+  font-weight: 300;
+  line-height: 1.4;
+  color: ${({ theme }) => theme.colors.ivory};
+  text-shadow: 0 2px 18px rgba(4, 13, 15, 0.55);
+  margin: 0;
+`;
+
+const AtmosphereControl = styled.div`
+  display: flex;
+  margin-top: 34px;
+  border-top: 1px solid ${({ theme }) => theme.colors.line};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.line};
+  @media (max-width: 640px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+const AtmosphereBtn = styled.button`
+  flex: 1;
+  padding: 22px 12px 18px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-family: ${({ theme }) => theme.fonts.ui};
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: ${({ theme, $active }) => ($active ? theme.colors.gold : theme.colors.inkSoft)};
+  border-bottom-color: ${({ theme, $active }) => ($active ? theme.colors.gold : 'transparent')};
+  transition: color 0.4s ease, border-color 0.4s ease;
+  &:hover {
+    color: ${({ theme, $active }) => ($active ? theme.colors.gold : theme.colors.ink)};
+  }
+  @media (max-width: 640px) {
+    border-bottom-width: 1px;
+    &:nth-child(odd) {
+      border-right: 1px solid ${({ theme }) => theme.colors.line};
+    }
+  }
+`;
+
+const ATMOSPHERES = [
+  {
+    label: 'Morning',
+    time: '06:00',
+    tint: 'linear-gradient(180deg, rgba(255, 230, 180, 0.26) 0%, rgba(255, 198, 128, 0.12) 100%)',
+    line: 'First light slips through the teak shutters — coffee on the terrace as the forest wakes.',
+  },
+  {
+    label: 'Afternoon',
+    time: '14:00',
+    tint: 'linear-gradient(180deg, rgba(255, 244, 214, 0.14) 0%, rgba(214, 170, 110, 0.12) 100%)',
+    line: 'Dappled shade across the courtyard, a book in hand, and the steady hum of cicadas.',
+  },
+  {
+    label: 'Golden Hour',
+    time: '18:30',
+    tint: 'linear-gradient(180deg, rgba(255, 176, 96, 0.34) 0%, rgba(196, 120, 52, 0.26) 100%)',
+    line: 'Sundowners settle over the Zambezi as the sky turns to bronze and the forest hushes.',
+  },
+  {
+    label: 'Night',
+    time: '22:00',
+    tint: 'linear-gradient(180deg, rgba(10, 24, 28, 0.72) 0%, rgba(6, 16, 19, 0.88) 100%)',
+    line: 'Candlelight, a cool breeze through the trees, and the Southern Cross overhead.',
+  },
+];
+
 const SUITE_GALLERY = [
   { src: 'https://www.mbanomanorhotel.com/wp-content/uploads/2020/03/Mbano-suite-view-of-lounge.jpg', alt: 'Mbano suite lounge' },
   { src: 'https://www.mbanomanorhotel.com/wp-content/uploads/2020/03/Mbano-bathroom.jpg', alt: 'Mbano suite bathroom' },
@@ -65,6 +201,7 @@ const SUITE_FEATURES = [
 
 export default function LuxurySuites() {
   const openLightbox = useLightbox();
+  const [atmosphere, setAtmosphere] = useState(0);
 
   return (
     <>
@@ -76,15 +213,37 @@ export default function LuxurySuites() {
         sub="Effortless comfort and elegance combine with spacious Victoria Falls accommodation and personalised, intuitive service to provide unrivalled hospitality at Mbano Manor Hotel Victoria Falls."
       />
 
-      <Section $pad={130}>
+      <Section $pad={70}>
         <Container>
           <Reveal>
-            <ContentImg $tall>
-              <img
-                src={img('2025/05/Untitled-design-2025-05-06T231716.810.jpg')}
-                alt="Mbano Manor luxury suites in the forest"
-              />
-            </ContentImg>
+            <SectionHead>
+              <SectionLabel>Suite Explorer</SectionLabel>
+              <SectionTitle>Move Into Your Suite</SectionTitle>
+              <Divider />
+              <SectionText>
+                Wander through the day at Mbano — from first light on the terrace to the African night beyond the trees.
+              </SectionText>
+            </SectionHead>
+          </Reveal>
+          <Reveal>
+            <Scene>
+              <SceneImage $src={img('2025/05/Untitled-design-2025-05-06T231716.810.jpg')} />
+              <SceneTint $tint={ATMOSPHERES[atmosphere].tint} />
+              <SceneVignette />
+              <SceneCaption key={ATMOSPHERES[atmosphere].label}>
+                <SceneClock>{ATMOSPHERES[atmosphere].time}</SceneClock>
+                <SceneLine>{ATMOSPHERES[atmosphere].line}</SceneLine>
+              </SceneCaption>
+            </Scene>
+          </Reveal>
+          <Reveal>
+            <AtmosphereControl>
+              {ATMOSPHERES.map((a, i) => (
+                <AtmosphereBtn key={a.label} $active={atmosphere === i} onClick={() => setAtmosphere(i)}>
+                  {a.label}
+                </AtmosphereBtn>
+              ))}
+            </AtmosphereControl>
           </Reveal>
         </Container>
       </Section>

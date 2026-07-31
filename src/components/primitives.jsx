@@ -16,7 +16,9 @@ export const Section = styled.section`
         : $tint
           ? theme.colors.pureWhite
           : 'transparent'};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.line};
   ${({ $pad }) => $pad && `padding: ${$pad}px 0;`}
+  ${({ $noBorder }) => $noBorder && 'border-bottom: none;'}
   @media (max-width: 768px) {
     padding: 76px 0;
     ${({ $pad }) => $pad && `padding: ${Math.round($pad * 0.55)}px 0;`}

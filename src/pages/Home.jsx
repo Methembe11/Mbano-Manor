@@ -588,6 +588,145 @@ const VoiceQuote = styled.p`
   margin: 24px 0;
 `;
 
+/* ===== CHAPTER / EDITORIAL ===== */
+const ChapterLabel = styled.div`
+  font-family: ${({ theme }) => theme.fonts.ui};
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.gold};
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  ${({ $center }) => $center && 'justify-content: center;'}
+  &::after {
+    content: '';
+    width: 36px;
+    height: 1px;
+    background: ${({ theme }) => theme.colors.gold};
+    opacity: 0.55;
+  }
+`;
+
+const DiscoveryStack = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 92px;
+  margin-top: 96px;
+  @media (max-width: 768px) {
+    gap: 68px;
+    margin-top: 64px;
+  }
+`;
+
+const DiscoveryStat = styled.div`
+  text-align: center;
+`;
+
+const DiscoveryNum = styled.div`
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: clamp(76px, 14vw, 160px);
+  font-weight: 400;
+  line-height: 1;
+  color: ${({ theme }) => theme.colors.gold};
+`;
+
+const DiscoveryLabel = styled.div`
+  font-family: ${({ theme }) => theme.fonts.ui};
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.inkSoft};
+  margin-top: 20px;
+`;
+
+const FounderSub = styled.p`
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: clamp(18px, 1.7vw, 21px);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.6;
+  color: ${({ theme }) => theme.colors.bronze};
+  margin-top: 14px;
+`;
+
+const FounderQuote = styled.blockquote`
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: clamp(21px, 2.3vw, 28px);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.5;
+  color: ${({ theme }) => theme.colors.teal};
+  border-left: 2px solid ${({ theme }) => theme.colors.gold};
+  padding-left: 22px;
+  margin: 30px 0 26px;
+  span {
+    display: block;
+    margin-top: 14px;
+    font-family: ${({ theme }) => theme.fonts.ui};
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-style: normal;
+    color: ${({ theme }) => theme.colors.gold};
+  }
+`;
+
+const QuietLine = styled.p`
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: clamp(30px, 4.4vw, 56px);
+  font-weight: 300;
+  line-height: 1.3;
+  color: ${({ theme }) => theme.colors.ink};
+  margin-top: 30px;
+  em { font-style: italic; color: ${({ theme }) => theme.colors.bronze}; }
+`;
+
+const AwardsHead = styled.h2`
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: clamp(40px, 6vw, 76px);
+  font-weight: 400;
+  line-height: 1.08;
+  color: ${({ theme }) => theme.colors.ivory};
+  margin: 34px 0 64px;
+  span { font-style: italic; color: ${({ theme }) => theme.colors.gold}; }
+`;
+
+const AwardRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+  padding: 28px 0;
+  border-top: 1px solid rgba(248, 247, 242, 0.12);
+  &:last-of-type { border-bottom: 1px solid rgba(248, 247, 242, 0.12); }
+`;
+
+const AwardName = styled.div`
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: clamp(19px, 2vw, 26px);
+  font-weight: 300;
+  color: ${({ theme }) => theme.colors.ivory};
+`;
+
+const AwardYear = styled.div`
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: clamp(22px, 2.4vw, 32px);
+  color: ${({ theme }) => theme.colors.gold};
+  white-space: nowrap;
+`;
+
+const ClosingLine = styled.div`
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: clamp(24px, 3vw, 38px);
+  font-weight: 400;
+  font-style: italic;
+  color: ${({ theme }) => theme.colors.gold};
+  margin-bottom: 18px;
+`;
+
 /* ===== DATA ===== */
 const NEWS_ITEMS = [
   {
@@ -744,7 +883,7 @@ export default function Home() {
           </HeroSub>
           <HeroActions>
             <BtnPrimary as={Link} to="/book-now">
-              Reserve Your Stay
+              Begin Your Stay
             </BtnPrimary>
             <BtnOutline as={Link} to="/dr-mati-nyazema-story">
               The Mbano Story
@@ -782,20 +921,60 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* STORY */}
-      <Section $pad={40} $tint>
+      {/* CHAPTER ONE — DISCOVERY */}
+      <Section $pad={120}>
         <Container>
+          <Reveal>
+            <SectionHead $center>
+              <ChapterLabel $center>Chapter One &middot; Discovery</ChapterLabel>
+            </SectionHead>
+          </Reveal>
+          <DiscoveryStack>
+            <Reveal delay={0.08}>
+              <DiscoveryStat>
+                <DiscoveryNum>18</DiscoveryNum>
+                <DiscoveryLabel>Private Suites, Hidden in the Teak</DiscoveryLabel>
+              </DiscoveryStat>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <DiscoveryStat>
+                <DiscoveryNum>4</DiscoveryNum>
+                <DiscoveryLabel>Acres of Ancient Forest</DiscoveryLabel>
+              </DiscoveryStat>
+            </Reveal>
+            <Reveal delay={0.32}>
+              <DiscoveryStat>
+                <DiscoveryNum>One</DiscoveryNum>
+                <DiscoveryLabel>Extraordinary Sanctuary</DiscoveryLabel>
+              </DiscoveryStat>
+            </Reveal>
+          </DiscoveryStack>
+        </Container>
+      </Section>
+
+      {/* CHAPTER TWO — THE STORY */}
+      <Section $pad={130} $tint>
+        <Container>
+          <Reveal>
+            <ChapterLabel>Chapter Two &middot; The Story</ChapterLabel>
+          </Reveal>
           <TwoCol>
-            <Reveal>
+            <Reveal delay={0.05}>
               <ContentImg>
                 <img src={img('2026/01/Untitled-design-2026-01-25T193718.273-1024x1024.jpg')} alt="Dr Mati Nyazema — Founder of Mbano Manor Hotel" />
               </ContentImg>
             </Reveal>
-            <Reveal delay={0.1}>
+            <Reveal delay={0.12}>
               <ContentText>
-                <SectionLabel>The Mbano Story</SectionLabel>
-                <SectionTitle>A Dream Forged at Victoria Falls</SectionTitle>
+                <SectionTitle>A Vision Rooted in Zimbabwe</SectionTitle>
+                <FounderSub>
+                  Built by a Zimbabwean woman determined to create a luxury destination unlike any other.
+                </FounderSub>
                 <Divider />
+                <FounderQuote>
+                  "Zimbabwe deserved a sanctuary that could stand among the world's finest destinations."
+                  <span>Dr Matifadza Martha Nyazema &middot; Founder</span>
+                </FounderQuote>
                 <SectionText>
                   Decades ago, a young African girl stood before the thundering waterfalls of Victoria Falls and a dream was sparked. That dream is now Mbano Manor Hotel — a bespoke luxury five-star hotel, proudly black female-owned, at the edge of the ancient teak forest.
                 </SectionText>
@@ -811,12 +990,12 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* STAY */}
+      {/* CHAPTER THREE — ARRIVAL / STAY */}
       <Section $pad={130} $deep>
         <Container>
           <Reveal>
             <SectionHead $center>
-              <SectionLabel>Accommodation</SectionLabel>
+              <ChapterLabel $center>Chapter Three &middot; Arrival</ChapterLabel>
               <SectionTitle $light>A Choice of Sanctuary</SectionTitle>
               <SectionText $light $mt={16}>
                 From private forest suites to an opulent villa, each space is a haven of understated luxury.
@@ -864,14 +1043,6 @@ export default function Home() {
           <Reveal>
             <StayFeatures>
               <StayFeature>
-                <StayFeatureNumber>18</StayFeatureNumber>
-                <StayFeatureLabel>Private Suites</StayFeatureLabel>
-              </StayFeature>
-              <StayFeature>
-                <StayFeatureNumber>4</StayFeatureNumber>
-                <StayFeatureLabel>Acre Teak Forest</StayFeatureLabel>
-              </StayFeature>
-              <StayFeature>
                 <StayFeatureNumber>45</StayFeatureNumber>
                 <StayFeatureLabel>Sqm Suite Space</StayFeatureLabel>
               </StayFeature>
@@ -879,17 +1050,25 @@ export default function Home() {
                 <StayFeatureNumber>200</StayFeatureNumber>
                 <StayFeatureLabel>Sqm Villa Space</StayFeatureLabel>
               </StayFeature>
+              <StayFeature>
+                <StayFeatureNumber>24/7</StayFeatureNumber>
+                <StayFeatureLabel>Butler Service</StayFeatureLabel>
+              </StayFeature>
+              <StayFeature>
+                <StayFeatureNumber>4km</StayFeatureNumber>
+                <StayFeatureLabel>From the Falls</StayFeatureLabel>
+              </StayFeature>
             </StayFeatures>
           </Reveal>
         </Container>
       </Section>
 
-      {/* EXPERIENCES */}
+      {/* CHAPTER FOUR — BEYOND THE MANOR */}
       <Section $pad={130}>
         <Container>
           <Reveal>
             <SectionHead>
-              <SectionLabel>Victoria Falls</SectionLabel>
+              <ChapterLabel>Chapter Four &middot; Beyond the Manor</ChapterLabel>
               <SectionTitle>Experience Majesty</SectionTitle>
               <SectionText $mt={16}>
                 One of the Seven Natural Wonders of the World — 1,700 metres wide, more than 100 metres deep, and four kilometres from your suite.
@@ -945,6 +1124,20 @@ export default function Home() {
           </Reveal>
         </QuoteBandInner>
       </QuoteBand>
+
+      {/* CHAPTER FIVE — LIFE WITHIN THE FOREST */}
+      <Section $pad={130}>
+        <Container>
+          <Reveal>
+            <SectionHead $center>
+              <ChapterLabel $center>Chapter Five &middot; Life Within the Forest</ChapterLabel>
+              <QuietLine>
+                Luxury Exists In The <em>Quiet</em> Moments.
+              </QuietLine>
+            </SectionHead>
+          </Reveal>
+        </Container>
+      </Section>
 
       {/* DINING */}
       <Section $pad={130}>
@@ -1076,6 +1269,43 @@ export default function Home() {
         </Container>
       </Section>
 
+      {/* CHAPTER EIGHT — RECOGNITION */}
+      <Section $pad={150} $deep>
+        <Container>
+          <Reveal>
+            <ChapterLabel>Chapter Eight &middot; Recognition</ChapterLabel>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <AwardsHead>
+              Recognized Among the <span>World's Greatest Places</span>
+            </AwardsHead>
+          </Reveal>
+          <Reveal delay={0.18}>
+            <AwardRow>
+              <AwardName>Time &middot; World's Greatest Places</AwardName>
+              <AwardYear>2025</AwardYear>
+            </AwardRow>
+          </Reveal>
+          <Reveal delay={0.26}>
+            <AwardRow>
+              <AwardName>Best Boutique Lodge in Zimbabwe &middot; AZTA Awards</AwardName>
+              <AwardYear>2024</AwardYear>
+            </AwardRow>
+          </Reveal>
+          <Reveal delay={0.34}>
+            <AwardRow>
+              <AwardName>Tourism Inspiration Award &middot; South Africa</AwardName>
+              <AwardYear>2015</AwardYear>
+            </AwardRow>
+          </Reveal>
+          <Reveal delay={0.42}>
+            <StoryCta as={Link} to="/media-articles">
+              All Press &amp; Recognition &rarr;
+            </StoryCta>
+          </Reveal>
+        </Container>
+      </Section>
+
       {/* GALLERY */}
       <Section $pad={130} $deep>
         <Container>
@@ -1105,7 +1335,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* GUEST VOICES */}
+      {/* CHAPTER NINE — GUEST STORIES */}
       <Section $pad={130}>
         <Container>
           <TwoCol>
@@ -1116,7 +1346,7 @@ export default function Home() {
             </Reveal>
             <Reveal delay={0.1}>
               <ContentText>
-                <SectionLabel>Guest Voices</SectionLabel>
+                <ChapterLabel>Chapter Nine &middot; Guest Stories</ChapterLabel>
                 <SectionTitle>A Little Hideaway Near Victoria Falls</SectionTitle>
                 <VoiceQuote>
                   "Staying at Mbano Manor felt like finding a quiet little hideaway near Victoria Falls."
@@ -1161,16 +1391,17 @@ export default function Home() {
 
       <ContactSection />
 
-      {/* CTA */}
+      {/* FINAL SCENE */}
       <CtaBanner>
         <Container>
+          <ClosingLine>Some places are visited. Others are remembered forever.</ClosingLine>
           <h2>Your Mbano Story Awaits</h2>
           <p>
             An intimate five-star sanctuary hidden within Victoria Falls. Check-in from {CONTACT.checkIn}, checkout at {CONTACT.checkOut} — early arrivals and late departures are accommodated subject to availability.
           </p>
           <CtaActions>
             <BtnPrimary as={Link} to="/book-now">
-              Book Now
+              Begin Your Stay
             </BtnPrimary>
             <BtnWhatsapp href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">
               WhatsApp Reservations
