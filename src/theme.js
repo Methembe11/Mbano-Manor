@@ -1,6 +1,7 @@
 export const theme = {
   colors: {
     ivory: '#F3EEE7',
+    sand: '#E9E3D8',
     pureWhite: '#FFFFFF',
     ink: '#0A0A08',
     inkSoft: 'rgba(10, 10, 8, 0.68)',
@@ -19,9 +20,9 @@ export const theme = {
     whatsappDark: '#24584A',
   },
   fonts: {
-    display: "'Lyon Display', serif",
-    body: "'Lyon Text', serif",
-    ui: "'Whitney SSm', 'Inter', sans-serif",
+    display: "'Cormorant Garamond', 'Lyon Display', serif",
+    body: "'Cormorant Garamond', 'Lyon Text', serif",
+    ui: "'Inter', 'Whitney SSm', sans-serif",
   },
   navHeight: '88px',
   navHeightMobile: '68px',

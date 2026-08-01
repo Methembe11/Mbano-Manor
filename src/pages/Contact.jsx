@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import {
   Container, Section, SectionLabel, SectionTitle, SectionText, Divider, SectionHead,
-  TwoCol, ContentImg, ContentText, DetailList, ContactForm,
+  TwoCol, ContentImg, ContentText, DetailList, ContactForm, Media,
   BtnWhatsapp, BtnOutline, CtaBanner, CtaActions, BtnPrimary, Reveal,
 } from '../components/primitives';
 import PageHero from '../components/PageHero';
@@ -58,6 +58,7 @@ export default function Contact() {
                 <img
                   src="https://www.mbanomanorhotel.com/wp-content/uploads/2020/03/reception.jpg"
                   alt="Mbano Manor Hotel reception"
+                  fetchPriority="high"
                 />
               </ContentImg>
             </Reveal>
@@ -139,12 +140,12 @@ export default function Contact() {
             </SectionHead>
           </Reveal>
           <Reveal delay={0.1}>
-            <div>
+            <Media $ratio="600 / 377">
               <img
                 src="https://www.mbanomanorhotel.com/wp-content/uploads/2019/01/190114-MBANO-UPDATED-MAP-600x377.jpg"
                 alt="Map of Mbano Manor Hotel location"
               />
-            </div>
+            </Media>
           </Reveal>
         </Container>
       </Section>

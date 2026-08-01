@@ -337,6 +337,7 @@ export default function VictoriaFalls() {
                 <img
                   src={img('2026/03/Untitled-design-2026-03-30T003026.377-1024x683.jpg')}
                   alt="Victoria Falls spray"
+                  fetchPriority="high"
                 />
               </ContentImg>
             </Reveal>

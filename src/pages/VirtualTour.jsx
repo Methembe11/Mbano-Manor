@@ -78,6 +78,7 @@ export default function VirtualTour() {
                 <img
                   src="https://www.mbanomanorhotel.com/wp-content/uploads/2025/03/Suite-exterior-scaled.jpg"
                   alt="Suite exterior at Mbano Manor"
+                  fetchPriority="high"
                 />
               </GridItem>
             </Reveal>

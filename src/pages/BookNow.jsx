@@ -142,7 +142,7 @@ export default function BookNow() {
           <Reveal>
             <SectionHead $center>
               <SectionLabel>The Reservation</SectionLabel>
-              <SectionTitle>Begin Your Stay</SectionTitle>
+              <SectionTitle>Compose Your Stay</SectionTitle>
               <SectionText>
                 Tell us when you dream of arriving — and we will prepare the rest. Compose your request below and our
                 reservations team will take it from there.
@@ -196,7 +196,7 @@ export default function BookNow() {
                   )}
                 </Summary>
                 <BtnPrimary as="button" onClick={beginStay}>
-                  Begin Your Stay
+                  Reserve
                 </BtnPrimary>
               </SummaryRow>
             </Composer>

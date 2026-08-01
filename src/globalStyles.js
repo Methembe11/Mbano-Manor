@@ -12,8 +12,8 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  img { max-width: 100%; display: block; }
-  a { text-decoration: none; color: inherit; }
+  img { max-width: 100%; display: block; background: ${({ theme }) => theme.colors.sand}; }
+  a { text-decoration: none; color: ${({ theme }) => theme.colors.gold}; }
   ul { list-style: none; }
   button { font-family: inherit; }
   h1, h2, h3, h4, h5, h6 { font-family: ${({ theme }) => theme.fonts.display}; line-height: 1.15; }

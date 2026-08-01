@@ -33,7 +33,7 @@ Other shared components:
 - `PageHero` from `../components/PageHero` — props `badge`, `title`, `sub`, `crumb="/"`, `crumbLabel`.
 - `ContactSection` from `../components/ContactSection` — the contact info + fake form block.
 - `LightboxImage` from `../components/LightboxImage` — `<LightboxImage src= caption= alt= />` opens the lightbox on click.
-- Data: `src/data/site.js` — `CONTACT` (phones/emails/WhatsApp/address), `img(path)` helper, `LOGO`, etc.
+- Data: `src/data/site.js` — `CONTACT` (phones/emails/WhatsApp/address), `img(path)` helper, `LOGO`, etc. `HERO_VIDEOS` drives the home hero: each entry is `{ src, poster, eyebrow, title: [line1, line2], sub }` — 8s crossfade with per-slide text. Hero clips are self-hosted in `public/videos/` (Pexels hotlinks are throttled and won't play).
 
 ## Rules
 
@@ -45,7 +45,7 @@ Other shared components:
 6. If a section needs styles NOT in primitives, define a local styled component at the TOP of the page file using the same CSS values from `src/theme.js` (e.g. `theme.colors.forestNight`).
 7. Use `Reveal` for scroll animations on sections/cards where the old HTML used `class="reveal"` (+ `reveal-delay-1/2/3` → `delay={0.1/0.2/0.3}`).
 8. NO `<style>` blocks, NO `className`, NO inline `<div style="...">` strings — everything is styled-components or React `style={{}}` objects.
-9. The lightbox: for clickable gallery images use `<LightboxImage src={url} caption alt />`. For multi-image grids use `useLightbox()` from `../context/Lightbox` on click if you need custom markup.
+9. The lightbox: for clickable gallery images use `<LightboxImage src={url} caption alt />`. For multi-image grids use `useLightbox()` from `../context/Lightbox` on click if you need custom markup. It also supports YouTube embeds: `openLightbox(url, title, 'video')` renders the film in a 16:9 modal.
 10. Do NOT import React Router `Link` unless needed. Do NOT edit `App.jsx`, `main.jsx`, or any shared component. Only write YOUR page file.
 11. Watch out: styled component names must not collide with the function name (e.g. don't name a styled component `Gallery` inside `Gallery.jsx`).
 

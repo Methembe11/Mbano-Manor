@@ -46,6 +46,7 @@ export default function MbanoStory() {
                 <img
                   src="https://www.mbanomanorhotel.com/wp-content/uploads/2022/05/slidea.jpg"
                   alt="Mbano Manor Hotel set in the teak forest"
+                  fetchPriority="high"
                 />
               </ContentImg>
             </Reveal>

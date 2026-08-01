@@ -28,9 +28,17 @@ import PageHero from '../components/PageHero';
 const AwardsLogo = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: 180px;
+  background: ${({ theme }) => theme.colors.sand};
+  border-radius: ${({ theme }) => theme.radius};
+  overflow: hidden;
   img {
     max-width: 100%;
+    max-height: 100%;
+    width: auto;
     height: auto;
+    object-fit: contain;
   }
 `;
 
@@ -53,6 +61,7 @@ export default function AboutMbano() {
                 <img
                   src="https://www.mbanomanorhotel.com/wp-content/uploads/2020/02/luxury-banner2.jpg"
                   alt="Mbano Manor Hotel surrounded by forest"
+                  fetchPriority="high"
                 />
               </ContentImg>
             </Reveal>

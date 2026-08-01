@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import {
   Container, Section, SectionLabel, SectionTitle, SectionText, Divider, SectionHead,
-  TwoCol, ContentImg, ContentText, DetailList, ImgGrid, GridItem, GalleryCaption,
+  TwoCol, ContentImg, ContentText, DetailList, ImgGrid, GridItem, GalleryCaption, Media,
   CtaBanner, CtaActions, BtnPrimary, BtnWhatsapp, Reveal,
 } from '../components/primitives';
 import PageHero from '../components/PageHero';
@@ -39,6 +39,7 @@ export default function DrMatiNyazemaStory() {
                 <img
                   src="https://www.mbanomanorhotel.com/wp-content/uploads/2020/03/garden.jpg"
                   alt="The gardens of Mbano Manor Hotel"
+                  fetchPriority="high"
                 />
               </ContentImg>
             </Reveal>
@@ -223,24 +224,24 @@ export default function DrMatiNyazemaStory() {
       <Section $tint>
         <Container>
           <Reveal>
-            <div>
+            <Media $ratio="3 / 2">
               <img
                 src="https://www.mbanomanorhotel.com/wp-content/uploads/2021/01/mbanos.jpg"
                 alt="Mati Nyazema on a family visit to Victoria Falls with her father and sister"
               />
-              <GalleryCaption>
-                Mbano Manor Hotel Director &amp; Owner Mati Nyazema on a memorable family visit to Victoria Falls with
-                her father the late EPC Rukanzakanza and sister Pet Joy (left).
-              </GalleryCaption>
-            </div>
+            </Media>
+            <GalleryCaption>
+              Mbano Manor Hotel Director &amp; Owner Mati Nyazema on a memorable family visit to Victoria Falls with
+              her father the late EPC Rukanzakanza and sister Pet Joy (left).
+            </GalleryCaption>
           </Reveal>
           <Reveal delay={0.1}>
-            <div>
+            <Media $ratio="1024 / 165">
               <img
                 src="https://www.mbanomanorhotel.com/wp-content/uploads/2024/08/logos-1024x165.jpg"
                 alt="Mbano Manor Hotel awards and recognition logos"
               />
-            </div>
+            </Media>
           </Reveal>
         </Container>
       </Section>

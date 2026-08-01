@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import {
   Container, Section, SectionLabel, SectionTitle, SectionText, Divider, SectionHead,
-  DetailList, ContentImg, CtaBanner, CtaActions, BtnPrimary, BtnOutline, Reveal,
+  DetailList, ContentImg, Media, CtaBanner, CtaActions, BtnPrimary, BtnOutline, Reveal,
 } from '../components/primitives';
 import PageHero from '../components/PageHero';
 
@@ -78,6 +78,7 @@ export default function MbanoMeaning() {
               <img
                 src="https://www.mbanomanorhotel.com/wp-content/uploads/2021/01/mbanos701.jpg"
                 alt="Mbano Manor Hotel"
+                fetchPriority="high"
               />
             </ContentImg>
           </Reveal>
@@ -137,12 +138,12 @@ export default function MbanoMeaning() {
       <Section $tint>
         <Container>
           <Reveal>
-            <div>
+            <Media $ratio="1024 / 165">
               <img
                 src="https://www.mbanomanorhotel.com/wp-content/uploads/2024/08/logos-1024x165.jpg"
                 alt="Mbano Manor Hotel awards and recognition logos"
               />
-            </div>
+            </Media>
           </Reveal>
         </Container>
       </Section>

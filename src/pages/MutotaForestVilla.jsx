@@ -53,6 +53,7 @@ export default function MutotaForestVilla() {
                 <img
                   src="https://www.mbanomanorhotel.com/wp-content/uploads/2025/01/1.jpg"
                   alt="Mutota Forest Villa exterior"
+                  fetchPriority="high"
                 />
               </ContentImg>
             </Reveal>

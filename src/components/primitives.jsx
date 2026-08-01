@@ -150,6 +150,21 @@ export const ContentText = styled.div`
   .section-text { margin-bottom: 24px; }
 `;
 
+export const Media = styled.div`
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: ${({ theme }) => theme.colors.sand};
+  border-radius: ${({ theme }) => theme.radius};
+  ${({ $ratio }) => $ratio && `aspect-ratio: ${$ratio};`}
+  ${({ $height }) => $height && `height: ${$height};`}
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: ${({ $fit }) => $fit || 'cover'};
+  }
+`;
+
 export const DetailList = styled.ul`
   li {
     position: relative;
@@ -512,7 +527,7 @@ export const SpecTable = styled.table`
 
 /* ===== CTA BANNER ===== */
 export const CtaBanner = styled.section`
-  background: ${({ theme }) => theme.colors.tealDeep};
+  background: ${({ theme }) => theme.colors.ivory};
   text-align: center;
   padding: 120px 0;
   position: relative;
@@ -521,7 +536,7 @@ export const CtaBanner = styled.section`
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(1200px 400px at 50% 110%, rgba(184, 155, 94, 0.14), transparent 65%);
+    background: radial-gradient(1200px 400px at 50% 110%, rgba(184, 155, 94, 0.08), transparent 65%);
     pointer-events: none;
   }
   h2 {
@@ -529,7 +544,7 @@ export const CtaBanner = styled.section`
     font-family: ${({ theme }) => theme.fonts.display};
     font-size: clamp(30px, 3.6vw, 46px);
     font-weight: 500;
-    color: ${({ theme }) => theme.colors.ivory};
+    color: ${({ theme }) => theme.colors.ink};
     margin-bottom: 18px;
   }
   p {
@@ -537,7 +552,7 @@ export const CtaBanner = styled.section`
     font-family: ${({ theme }) => theme.fonts.body};
     font-size: 19px;
     font-weight: 300;
-    color: ${({ theme }) => theme.colors.warmStone};
+    color: ${({ theme }) => theme.colors.inkSoft};
     max-width: 620px;
     margin: 0 auto 38px;
   }

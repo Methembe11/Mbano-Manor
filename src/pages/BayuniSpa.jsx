@@ -56,6 +56,7 @@ export default function BayuniSpa() {
                 <img
                   src="https://www.mbanomanorhotel.com/wp-content/uploads/2025/09/BayuniSpa.jpg"
                   alt="Bayuni Spa at Mbano Manor Hotel"
+                  fetchPriority="high"
                 />
               </ContentImg>
             </Reveal>

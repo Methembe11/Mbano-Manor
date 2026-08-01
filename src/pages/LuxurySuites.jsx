@@ -264,6 +264,7 @@ export default function LuxurySuites() {
                 <img
                   src="https://www.mbanomanorhotel.com/wp-content/uploads/2020/03/Mbano-suite-view.jpg"
                   alt="View of a Mbano Manor suite"
+                  fetchPriority="high"
                 />
               </ContentImg>
             </Reveal>

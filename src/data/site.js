@@ -22,44 +22,72 @@ export const CONTACT = {
   youtube: 'https://youtu.be/BHuPku9Et0A',
 };
 
-export const HERO_SLIDES = [
-  img('2025/05/2.jpg'),
-  img('2025/05/Untitled-design-2025-05-06T231415.247.jpg'),
-  img('2025/03/VicFalls3-scaled.jpg'),
-  img('2026/02/vicfallssunset.jpg'),
-  img('2022/08/VictoriaFalls.jpg'),
-];
-
 export const LOGO = img('2025/11/MbanoLogoWeb.png');
 
 export const VIDEO_LOOP = img('2022/06/Untitled-design-3.mp4');
 export const VIDEO_TESTIMONIAL =
   img('2026/01/Staying-at-@mbano_manor_hotel-felt-like-finding-a-quiet-little-hideaway-near-Victoria-Falls.-The-1.mp4');
 
+export const HERO_VIDEOS = [
+  {
+    src: '/videos/leaves.mp4',
+    poster:
+      'https://images.pexels.com/videos/17470805/background-blue-branch-climate-17470805.jpeg?auto=compress&cs=tinysrgb&w=1440',
+    eyebrow: 'The Forest Sanctuary',
+    title: ['Beneath a canopy', 'of ancient teak'],
+    sub: 'A four-acre sanctuary where only two trees were felled \u2014 and the forest keeps its own rhythm.',
+  },
+  {
+    src: '/videos/giraffe.mp4',
+    poster:
+      'https://images.pexels.com/videos/3206072/free-video-3206072.jpg?auto=compress&cs=tinysrgb&w=1440',
+    eyebrow: 'Wildlife at the Door',
+    title: ['Wildlife,', 'beyond the terrace'],
+    sub: 'Giraffe, elephant and the great reserves of Hwange and the Zambezi wait just beyond the sanctuary.',
+  },
+  {
+    src: '/videos/waterfall.mp4',
+    poster:
+      'https://images.pexels.com/videos/27380834/waterfall-waterfalls-zambia-27380834.jpeg?auto=compress&cs=tinysrgb&w=1440',
+    eyebrow: 'Four Kilometres Away',
+    title: ['Follow the path', 'to the Falls'],
+    sub: 'The Smoke that Thunders \u2014 one of the Seven Natural Wonders of the World, moments from your suite.',
+  },
+];
+
 export const NAV = [
   { label: 'Home', to: '/' },
   {
-    label: 'About',
-    to: '/about-mbano',
-    dropdown: [
-      { label: 'About Mbano', to: '/about-mbano' },
-      { label: 'Suites & Villa Video Tour', to: '/virtual-tour' },
-      { label: 'Gallery', to: '/gallery' },
-      { label: 'Guest Reviews', to: '/guest-reviews' },
-      { label: 'Mbano Forest', to: '/mbano-forest' },
-    ],
-  },
-  {
-    label: 'Luxury Suites & Villa',
+    label: 'Stay',
     to: '/luxury-suites',
     dropdown: [
       { label: '18 Luxury Suites', to: '/luxury-suites' },
       { label: 'Mutota Forest Villa', to: '/mutota-forest-villa' },
+      { label: 'Bayuni Spa', to: '/bayuni-spa' },
+      { label: 'Bespoke Packages', to: '/mbano-packages' },
     ],
   },
-  { label: 'Bayuni Spa', to: '/bayuni-spa' },
-  { label: 'Packages', to: '/mbano-packages' },
-  { label: 'Victoria Falls', to: '/victoria-falls' },
+  {
+    label: 'Experience',
+    to: '/victoria-falls',
+    dropdown: [
+      { label: 'Victoria Falls', to: '/victoria-falls' },
+      { label: 'Mbano Forest', to: '/mbano-forest' },
+      { label: 'Gallery', to: '/gallery' },
+      { label: 'Suites & Villa Video Tour', to: '/virtual-tour' },
+      { label: 'Guest Reviews', to: '/guest-reviews' },
+    ],
+  },
+  {
+    label: 'Our Story',
+    to: '/about-mbano',
+    dropdown: [
+      { label: 'About Mbano', to: '/about-mbano' },
+      { label: "Dr Mati's Story", to: '/dr-mati-nyazema-story' },
+      { label: 'Story of Mbano', to: '/mbano-story' },
+      { label: 'Mbano Meaning', to: '/mbano-meaning' },
+    ],
+  },
   {
     label: 'News',
     to: '/latest-news',
@@ -69,16 +97,7 @@ export const NAV = [
       { label: 'In the Media', to: '/media-articles' },
     ],
   },
-  {
-    label: 'Our Story',
-    to: '/dr-mati-nyazema-story',
-    dropdown: [
-      { label: "Dr Mati's Story", to: '/dr-mati-nyazema-story' },
-      { label: 'Story of Mbano', to: '/mbano-story' },
-      { label: 'Mbano Meaning', to: '/mbano-meaning' },
-    ],
-  },
-  { label: 'Contact Us', to: '/contact' },
+  { label: 'Contact', to: '/contact' },
 ];
 
 export const FOOTER_LINKS = [

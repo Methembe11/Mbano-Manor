@@ -43,6 +43,17 @@ const Image = styled.img`
   object-fit: contain;
 `;
 
+const VideoBox = styled.div`
+  width: min(90vw, 1100px);
+  aspect-ratio: 16 / 9;
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 2px;
+  }
+`;
+
 const Caption = styled.div`
   position: absolute;
   bottom: 32px;
@@ -56,11 +67,20 @@ const Caption = styled.div`
   color: ${({ theme }) => theme.colors.warmStone};
 `;
 
+function toEmbedUrl(url) {
+  const match = url.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]{6,})/,
+  );
+  return match
+    ? `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0`
+    : url;
+}
+
 export function LightboxProvider({ children }) {
   const [state, setState] = useState(null);
 
-  const openLightbox = useCallback((src, caption = '') => {
-    setState({ src, caption });
+  const openLightbox = useCallback((src, caption = '', type = 'image') => {
+    setState({ src, caption, type });
     document.body.style.overflow = 'hidden';
   }, []);
 
@@ -75,8 +95,21 @@ export function LightboxProvider({ children }) {
       {state && (
         <Overlay onClick={(e) => { if (e.target === e.currentTarget) closeLightbox(); }}>
           <CloseBtn onClick={closeLightbox}>&times;</CloseBtn>
-          <Image src={state.src} alt={state.caption} onClick={closeLightbox} />
-          {state.caption && <Caption>{state.caption}</Caption>}
+          {state.type === 'video' ? (
+            <VideoBox>
+              <iframe
+                src={toEmbedUrl(state.src)}
+                title={state.caption}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </VideoBox>
+          ) : (
+            <>
+              <Image src={state.src} alt={state.caption} onClick={closeLightbox} />
+              {state.caption && <Caption>{state.caption}</Caption>}
+            </>
+          )}
         </Overlay>
       )}
     </LightboxContext.Provider>

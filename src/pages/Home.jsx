@@ -1,38 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import {
   Container,
   Section,
-  SectionLabel,
   SectionTitle,
   SectionText,
-  Divider,
   SectionHead,
-  StoryCta,
   TwoCol,
   ContentImg,
   ContentText,
-  CardGrid,
-  Card,
-  CardIcon,
-  CardTitle,
-  CardText,
   GalleryGrid,
   GalleryItem,
   GalleryOverlay,
   GalleryItemIcon,
-  VideoBlock,
   BtnPrimary,
-  BtnOutline,
   BtnWhatsapp,
   CtaBanner,
   CtaActions,
+  ReviewStars,
   Reveal,
 } from '../components/primitives';
 import { useLightbox } from '../context/Lightbox';
 import ContactSection from '../components/ContactSection';
-import { HERO_SLIDES, VIDEO_LOOP, VIDEO_TESTIMONIAL, CONTACT, img } from '../data/site';
+import { TRIPADVISOR_REVIEWS, GOOGLE_REVIEWS } from '../data/reviews';
+import { HERO_VIDEOS, CONTACT, img } from '../data/site';
 
 /* ===== HERO ===== */
 const Hero = styled.section`
@@ -46,11 +38,6 @@ const Hero = styled.section`
   @media (max-width: 768px) {
     min-height: 620px;
   }
-`;
-
-const HeroSlides = styled.div`
-  position: absolute;
-  inset: 0;
 `;
 
 const heroOrigins = ['50% 40%', '40% 60%', '60% 50%', '45% 30%', '55% 60%'];
@@ -68,6 +55,21 @@ const HeroSlide = styled.div`
     to { transform: scale(1.1); }
   }
 `;
+
+const HeroVideo = styled.div`
+  position: absolute;
+  inset: 0;
+  opacity: ${({ $active }) => ($active ? 1 : 0)};
+  transition: opacity 1.4s ease;
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+`;
+
+const HeroText = styled.div``;
 
 const HeroOverlay = styled.div`
   position: absolute;
@@ -150,6 +152,64 @@ const HeroActions = styled.div`
   animation-delay: 0.95s;
 `;
 
+const heroBtn = css`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: ${({ theme }) => theme.fonts.ui};
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 16px 36px;
+  border-radius: ${({ theme }) => theme.radius};
+  color: ${({ theme }) => theme.colors.ivory};
+  cursor: pointer;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  transition: background 0.45s ${({ theme }) => theme.transition},
+    border-color 0.45s ${({ theme }) => theme.transition};
+`;
+
+const HeroBtnGold = styled(Link)`
+  ${heroBtn}
+  background: ${({ theme }) => theme.colors.gold};
+  border-color: ${({ theme }) => theme.colors.gold};
+  &:hover {
+    background: ${({ theme }) => theme.colors.bronze};
+    border-color: ${({ theme }) => theme.colors.bronze};
+  }
+`;
+
+const HeroBtnGreen = styled(Link)`
+  ${heroBtn}
+  background: ${({ theme }) => theme.colors.teal};
+  border-color: ${({ theme }) => theme.colors.teal};
+  &:hover {
+    background: ${({ theme }) => theme.colors.tealDeep};
+    border-color: ${({ theme }) => theme.colors.tealDeep};
+  }
+`;
+
+const HeroBtnFilm = styled.button`
+  ${heroBtn}
+  background: transparent;
+  border-color: rgba(248, 247, 242, 0.45);
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.gold};
+    color: ${({ theme }) => theme.colors.gold};
+  }
+`;
+
+const PlayIcon = styled.span`
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid ${({ theme }) => theme.colors.gold};
+`;
+
 const HeroScroll = styled.div`
   position: absolute;
   bottom: 42px;
@@ -212,10 +272,60 @@ const HeroScrollLine = styled.div`
   }
 `;
 
+/* ===== DISCOVER MORE ===== */
+const DiscoverLink = styled(Link)`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: ${({ theme }) => theme.fonts.ui};
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 15px 34px;
+  border: 1px solid ${({ theme }) => theme.colors.gold};
+  border-radius: ${({ theme }) => theme.radius};
+  color: ${({ theme }) => theme.colors.gold};
+  background: transparent;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.45s ${({ theme }) => theme.transition},
+    color 0.45s ${({ theme }) => theme.transition},
+    border-color 0.45s ${({ theme }) => theme.transition};
+  &:hover {
+    background: ${({ theme }) => theme.colors.gold};
+    border-color: ${({ theme }) => theme.colors.gold};
+    color: ${({ theme }) => theme.colors.ivory};
+  }
+  ${({ $dark, theme }) =>
+    $dark &&
+    css`
+      color: ${theme.colors.ivory};
+      border-color: rgba(248, 247, 242, 0.35);
+      &:hover {
+        background: ${theme.colors.gold};
+        border-color: ${theme.colors.gold};
+        color: ${theme.colors.ivory};
+      }
+    `}
+`;
+
+const SmallCaps = styled.div`
+  font-family: ${({ theme }) => theme.fonts.ui};
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.gold};
+  margin-bottom: 22px;
+  ${({ $center }) => $center && 'text-align: center;'}
+`;
+
 /* ===== MANIFESTO ===== */
 const Manifesto = styled.div`
   text-align: center;
-  max-width: 900px;
+  max-width: 920px;
   margin: 0 auto;
 `;
 
@@ -232,334 +342,247 @@ const PullQuote = styled.p`
   }
 `;
 
+const ManifestoLink = styled.div`
+  margin-top: 44px;
+`;
+
 /* ===== STAY CARDS ===== */
 const StayGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 28px;
-  margin-top: 64px;
+  gap: 56px;
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    margin-top: 48px;
+    gap: 40px;
   }
 `;
 
 const StayCard = styled(Link)`
+  display: block;
+`;
+
+const StayImage = styled.div`
   position: relative;
-  height: 520px;
   overflow: hidden;
+  aspect-ratio: 4 / 5;
   border-radius: ${({ theme }) => theme.radius};
-  cursor: pointer;
-  display: flex;
-  align-items: flex-end;
-  @media (max-width: 768px) {
-    height: 420px;
-  }
   img {
-    position: absolute;
-    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 1.2s ${({ theme }) => theme.transition};
+    transition: transform 1.3s ${({ theme }) => theme.transition};
   }
-  &:hover img { transform: scale(1.045); }
+  ${StayCard}:hover & img { transform: scale(1.05); }
 `;
 
-const StayCardOverlay = styled.div`
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(0deg, rgba(10, 40, 42, 0.82) 0%, transparent 62%);
+const StayMeta = styled.div`
+  margin-top: 26px;
+  padding-right: 12px;
 `;
 
-const StayCardContent = styled.div`
-  position: relative;
-  z-index: 2;
-  padding: 44px;
-  width: 100%;
-`;
-
-const StayCardLabel = styled.div`
+const StayLabel = styled.div`
   font-family: ${({ theme }) => theme.fonts.ui};
   font-size: 9px;
   font-weight: 500;
   letter-spacing: 4px;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.gold};
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 `;
 
-const StayCardTitle = styled.h3`
+const StayTitle = styled.h3`
   font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 26px;
-  font-weight: 500;
-  line-height: 1.2;
-  color: ${({ theme }) => theme.colors.ivory};
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 400;
+  line-height: 1.25;
+  color: ${({ theme }) => theme.colors.ink};
+  margin-bottom: 14px;
 `;
 
-const StayCardDesc = styled.p`
+const StayDesc = styled.p`
   font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 300;
-  line-height: 1.65;
-  color: ${({ theme }) => theme.colors.warmStone};
-  margin-top: 10px;
-  max-width: 400px;
-`;
-
-const StayCardCta = styled.span`
-  display: inline-block;
-  margin-top: 22px;
-  font-family: ${({ theme }) => theme.fonts.ui};
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 2.6px;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.gold};
-  padding-bottom: 4px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gold};
-  transition: padding 0.4s ${({ theme }) => theme.transition};
-  ${StayCard}:hover & { padding-bottom: 8px; }
-`;
-
-const StayFeatures = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  margin-top: 72px;
-  padding-top: 64px;
-  border-top: 1px solid ${({ theme }) => theme.colors.lineTeal};
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-    margin-top: 56px;
-    padding-top: 48px;
-  }
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const StayFeature = styled.div`
-  text-align: center;
-`;
-
-const StayFeatureNumber = styled.div`
-  font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 38px;
-  font-weight: 400;
-  color: ${({ theme }) => theme.colors.gold};
-`;
-
-const StayFeatureLabel = styled.div`
-  font-family: ${({ theme }) => theme.fonts.ui};
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 2.4px;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.warmStone};
-  margin-top: 10px;
-`;
-
-/* ===== EXPERIENCES ===== */
-const JourneySelector = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin: 56px 0 40px;
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const JourneyBtn = styled.button`
-  font-family: ${({ theme }) => theme.fonts.ui};
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 2.2px;
-  text-transform: uppercase;
-  padding: 15px 18px;
-  background: transparent;
-  border: 1px solid ${({ theme }) => theme.colors.line};
-  border-radius: ${({ theme }) => theme.radius};
-  cursor: pointer;
+  line-height: 1.7;
   color: ${({ theme }) => theme.colors.inkSoft};
-  transition: all 0.4s ease;
-  text-align: center;
-  &:hover {
-    border-color: ${({ theme }) => theme.colors.teal};
-    color: ${({ theme }) => theme.colors.teal};
-  }
-  ${({ $active, theme }) =>
-    $active &&
-    css`
-      background: ${theme.colors.teal};
-      border-color: ${theme.colors.teal};
-      color: ${theme.colors.ivory};
-    `}
+  margin-bottom: 26px;
+  max-width: 420px;
 `;
 
-const ActivitiesGrid = styled.div`
+const QuietRow = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px 44px;
+  margin-top: 72px;
+  font-family: ${({ theme }) => theme.fonts.ui};
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.inkSoft};
+  span { color: ${({ theme }) => theme.colors.gold}; }
+`;
+
+/* ===== EXPERIENCES GRID ===== */
+const Rail = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 48px 28px;
+  margin-top: 64px;
   @media (max-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 1fr;
+    gap: 44px 24px;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 680px) {
     grid-template-columns: 1fr;
+    gap: 44px;
   }
 `;
 
-const ActivityCard = styled.div`
-  position: relative;
-  height: 400px;
+const RailCard = styled(Link)`
+  display: block;
+`;
+
+const RailImage = styled.div`
   overflow: hidden;
+  aspect-ratio: 3 / 4;
   border-radius: ${({ theme }) => theme.radius};
-  cursor: pointer;
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 1.2s ${({ theme }) => theme.transition};
+    transition: transform 1.3s ${({ theme }) => theme.transition};
   }
-  &:hover img { transform: scale(1.05); }
-  ${({ $hidden }) => $hidden && 'display: none;'}
+  ${RailCard}:hover & img { transform: scale(1.06); }
 `;
 
-const ActivityCardOverlay = styled.div`
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(0deg, rgba(10, 40, 42, 0.68) 0%, transparent 55%);
-`;
-
-const ActivityCardContent = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 30px;
-  z-index: 2;
-`;
-
-const ActivityCardTitle = styled.h3`
-  font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 19px;
+const RailLabel = styled.div`
+  font-family: ${({ theme }) => theme.fonts.ui};
+  font-size: 9px;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors.ivory};
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.gold};
+  margin: 24px 0 12px;
 `;
 
-const ActivityCardDesc = styled.p`
+const RailTitle = styled.h3`
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: ${({ theme }) => theme.colors.ink};
+  margin-bottom: 10px;
+`;
+
+const RailDesc = styled.p`
   font-family: ${({ theme }) => theme.fonts.body};
   font-size: 15px;
   font-weight: 300;
-  line-height: 1.6;
-  color: ${({ theme }) => theme.colors.warmStone};
-  margin-top: 6px;
+  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.inkSoft};
 `;
 
-const ActivityMore = styled.div`
-  text-align: center;
-  margin-top: 44px;
-`;
-
-/* ===== QUOTE BAND ===== */
-const QuoteBand = styled.section`
+/* ===== FULL-BLEED BREAK ===== */
+const BreakBand = styled.section`
+  height: 72vh;
+  min-height: 480px;
+  display: flex;
+  align-items: flex-end;
+  background: url('${({ $src }) => $src}') center center / cover no-repeat;
   position: relative;
-  padding: 150px 0;
-  overflow: hidden;
-  background-image: url('${({ $src }) => $src}');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  text-align: center;
   @media (max-width: 768px) {
-    background-attachment: scroll;
-    padding: 100px 0;
+    height: 52vh;
   }
 `;
 
-const QuoteBandOverlay = styled.div`
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(14, 52, 54, 0.62), rgba(10, 40, 42, 0.78));
-`;
-
-const QuoteBandInner = styled.div`
+const BreakLabel = styled.div`
   position: relative;
   z-index: 2;
-  max-width: 860px;
-  margin: 0 auto;
-`;
-
-const QuoteBandText = styled.p`
-  font-family: ${({ theme }) => theme.fonts.body};
-  font-size: clamp(34px, 5vw, 64px);
-  font-weight: 300;
-  line-height: 1.18;
-  color: ${({ theme }) => theme.colors.ivory};
-  em { font-style: italic; color: ${({ theme }) => theme.colors.gold}; }
-`;
-
-const QuoteBandSub = styled.p`
+  padding: 0 56px 44px;
   font-family: ${({ theme }) => theme.fonts.ui};
   font-size: 10px;
-  letter-spacing: 4.5px;
+  letter-spacing: 5px;
   text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.warmStone};
-  margin-top: 30px;
+  color: ${({ theme }) => theme.colors.ivory};
+  text-shadow: 0 1px 18px rgba(10, 40, 42, 0.55);
+  @media (max-width: 768px) {
+    padding: 0 28px 32px;
+  }
 `;
 
-/* ===== SPA TREATMENTS ===== */
-const SpaTreatments = styled.div`
+/* ===== WORLD OF MBANO ===== */
+const WorldGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin: 36px 0 8px;
-  @media (max-width: 480px) {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 56px;
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 44px;
+  }
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
 `;
 
-const SpaTreatment = styled.div`
-  padding: 18px 22px;
-  border: 1px solid ${({ theme }) => theme.colors.line};
-  border-radius: ${({ theme }) => theme.radius};
+const WorldCell = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
+  flex-direction: column;
 `;
 
-const SpaTreatmentName = styled.div`
-  font-family: ${({ theme }) => theme.fonts.display};
-  font-size: 15px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.colors.ink};
+const WorldImage = styled.div`
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-radius: ${({ theme }) => theme.radius};
+  margin-bottom: 26px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.3s ${({ theme }) => theme.transition};
+  }
+  ${WorldCell}:hover & img { transform: scale(1.05); }
 `;
 
-const SpaTreatmentPrice = styled.div`
+const WorldLabel = styled.div`
   font-family: ${({ theme }) => theme.fonts.ui};
-  font-size: 10px;
-  letter-spacing: 2px;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 4px;
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.gold};
-  white-space: nowrap;
+  margin-bottom: 14px;
+`;
+
+const WorldTitle = styled.h3`
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 22px;
+  font-weight: 400;
+  color: ${({ theme }) => theme.colors.ink};
+  margin-bottom: 12px;
+`;
+
+const WorldText = styled.p`
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: ${({ theme }) => theme.colors.inkSoft};
+  margin-bottom: 24px;
+  flex: 1;
 `;
 
 /* ===== NEWS STRIP ===== */
 const NewsStrip = styled.ul`
   list-style: none;
   li {
-    padding: 20px 0;
+    padding: 22px 0;
     border-bottom: 1px solid ${({ theme }) => theme.colors.line};
     &:last-child { border-bottom: none; }
   }
   a {
     font-family: ${({ theme }) => theme.fonts.body};
-    font-size: 20px;
+    font-size: clamp(18px, 1.9vw, 22px);
     font-weight: 300;
     line-height: 1.4;
     color: ${({ theme }) => theme.colors.ink};
@@ -573,151 +596,11 @@ const NewsStrip = styled.ul`
     letter-spacing: 3px;
     text-transform: uppercase;
     color: ${({ theme }) => theme.colors.gold};
-    margin-top: 8px;
+    margin-top: 10px;
   }
 `;
 
-/* ===== GUEST VOICE ===== */
-const VoiceQuote = styled.p`
-  font-family: ${({ theme }) => theme.fonts.body};
-  font-size: clamp(24px, 2.6vw, 36px);
-  font-weight: 300;
-  font-style: italic;
-  line-height: 1.4;
-  color: ${({ theme }) => theme.colors.ink};
-  margin: 24px 0;
-`;
-
-/* ===== CHAPTER / EDITORIAL ===== */
-const ChapterLabel = styled.div`
-  font-family: ${({ theme }) => theme.fonts.ui};
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.gold};
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  ${({ $center }) => $center && 'justify-content: center;'}
-  &::after {
-    content: '';
-    width: 36px;
-    height: 1px;
-    background: ${({ theme }) => theme.colors.gold};
-    opacity: 0.55;
-  }
-`;
-
-const DiscoveryStack = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 92px;
-  margin-top: 96px;
-  @media (max-width: 768px) {
-    gap: 68px;
-    margin-top: 64px;
-  }
-`;
-
-const DiscoveryStat = styled.div`
-  text-align: center;
-`;
-
-const DiscoveryNum = styled.div`
-  font-family: ${({ theme }) => theme.fonts.display};
-  font-size: clamp(76px, 14vw, 160px);
-  font-weight: 400;
-  line-height: 1;
-  color: ${({ theme }) => theme.colors.gold};
-`;
-
-const DiscoveryLabel = styled.div`
-  font-family: ${({ theme }) => theme.fonts.ui};
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.inkSoft};
-  margin-top: 20px;
-`;
-
-const FounderSub = styled.p`
-  font-family: ${({ theme }) => theme.fonts.body};
-  font-size: clamp(18px, 1.7vw, 21px);
-  font-weight: 300;
-  font-style: italic;
-  line-height: 1.6;
-  color: ${({ theme }) => theme.colors.bronze};
-  margin-top: 14px;
-`;
-
-const FounderQuote = styled.blockquote`
-  font-family: ${({ theme }) => theme.fonts.body};
-  font-size: clamp(21px, 2.3vw, 28px);
-  font-weight: 300;
-  font-style: italic;
-  line-height: 1.5;
-  color: ${({ theme }) => theme.colors.teal};
-  border-left: 2px solid ${({ theme }) => theme.colors.gold};
-  padding-left: 22px;
-  margin: 30px 0 26px;
-  span {
-    display: block;
-    margin-top: 14px;
-    font-family: ${({ theme }) => theme.fonts.ui};
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    font-style: normal;
-    color: ${({ theme }) => theme.colors.gold};
-  }
-`;
-
-const QuietLine = styled.p`
-  font-family: ${({ theme }) => theme.fonts.body};
-  font-size: clamp(30px, 4.4vw, 56px);
-  font-weight: 300;
-  line-height: 1.3;
-  color: ${({ theme }) => theme.colors.ink};
-  margin-top: 30px;
-  em { font-style: italic; color: ${({ theme }) => theme.colors.bronze}; }
-`;
-
-const AwardsHead = styled.h2`
-  font-family: ${({ theme }) => theme.fonts.display};
-  font-size: clamp(40px, 6vw, 76px);
-  font-weight: 400;
-  line-height: 1.08;
-  color: ${({ theme }) => theme.colors.ivory};
-  margin: 34px 0 64px;
-  span { font-style: italic; color: ${({ theme }) => theme.colors.gold}; }
-`;
-
-const AwardRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 20px;
-  padding: 28px 0;
-  border-top: 1px solid rgba(248, 247, 242, 0.12);
-  &:last-of-type { border-bottom: 1px solid rgba(248, 247, 242, 0.12); }
-`;
-
-const AwardName = styled.div`
-  font-family: ${({ theme }) => theme.fonts.body};
-  font-size: clamp(19px, 2vw, 26px);
-  font-weight: 300;
-  color: ${({ theme }) => theme.colors.ivory};
-`;
-
-const AwardYear = styled.div`
-  font-family: ${({ theme }) => theme.fonts.display};
-  font-size: clamp(22px, 2.4vw, 32px);
-  color: ${({ theme }) => theme.colors.gold};
-  white-space: nowrap;
-`;
-
+/* ===== CLOSING ===== */
 const ClosingLine = styled.div`
   font-family: ${({ theme }) => theme.fonts.display};
   font-size: clamp(24px, 3vw, 38px);
@@ -726,6 +609,158 @@ const ClosingLine = styled.div`
   color: ${({ theme }) => theme.colors.gold};
   margin-bottom: 18px;
 `;
+
+/* ===== GUEST REVIEWS CAROUSEL ===== */
+const REVIEWS = [
+  ...TRIPADVISOR_REVIEWS.map((r) => ({ ...r, source: 'TripAdvisor' })),
+  ...GOOGLE_REVIEWS.map((r) => ({ ...r, source: 'Google' })),
+];
+
+const Carousel = styled.div`
+  position: relative;
+  max-width: 860px;
+  margin: 64px auto 0;
+  text-align: center;
+`;
+
+const Slide = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  position: ${({ $active }) => ($active ? 'relative' : 'absolute')};
+  inset: 0;
+  opacity: ${({ $active }) => ($active ? 1 : 0)};
+  visibility: ${({ $active }) => ($active ? 'visible' : 'hidden')};
+  pointer-events: ${({ $active }) => ($active ? 'auto' : 'none')};
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+`;
+
+const SlideTitle = styled.h3`
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 22px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.ink};
+  margin: 18px 0 6px;
+`;
+
+const SlideText = styled.p`
+  font-family: ${({ theme }) => theme.fonts.body};
+  font-size: clamp(19px, 2vw, 24px);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.7;
+  color: ${({ theme }) => theme.colors.ink};
+  max-width: 780px;
+`;
+
+const SlideAuthor = styled.div`
+  font-family: ${({ theme }) => theme.fonts.ui};
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.gold};
+  margin-top: 22px;
+`;
+
+const SlideSource = styled.div`
+  font-family: ${({ theme }) => theme.fonts.ui};
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.inkSoft};
+  margin-top: 5px;
+`;
+
+const CarouselControls = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 44px;
+`;
+
+const ArrowBtn = styled.button`
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(10, 10, 8, 0.18);
+  border-radius: 50%;
+  background: transparent;
+  color: ${({ theme }) => theme.colors.ink};
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.3s ease, color 0.3s ease;
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.gold};
+    color: ${({ theme }) => theme.colors.gold};
+  }
+`;
+
+const Dots = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const Dot = styled.button`
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: ${({ $active, theme }) => ($active ? theme.colors.gold : 'rgba(10, 10, 8, 0.18)')};
+  transition: background 0.3s ease;
+`;
+
+function ReviewsCarousel() {
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const go = (dir) => setIndex((i) => (i + dir + REVIEWS.length) % REVIEWS.length);
+
+  useEffect(() => {
+    if (paused) return undefined;
+    const t = setInterval(() => setIndex((i) => (i + 1) % REVIEWS.length), 6000);
+    return () => clearInterval(t);
+  }, [paused]);
+
+  return (
+    <Carousel onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+      {REVIEWS.map((r, i) => (
+        <Slide key={`${r.author}-${i}`} $active={i === index}>
+          <ReviewStars>★★★★★</ReviewStars>
+          {r.title && <SlideTitle>{r.title}</SlideTitle>}
+          <SlideText>&ldquo;{r.text}&rdquo;</SlideText>
+          <SlideAuthor>{r.author}</SlideAuthor>
+          <SlideSource>via {r.source}</SlideSource>
+        </Slide>
+      ))}
+      <CarouselControls>
+        <ArrowBtn aria-label="Previous review" onClick={() => go(-1)}>
+          &#8592;
+        </ArrowBtn>
+        <Dots>
+          {REVIEWS.map((_, i) => (
+            <Dot
+              key={i}
+              aria-label={`Go to review ${i + 1}`}
+              $active={i === index}
+              onClick={() => setIndex(i)}
+            />
+          ))}
+        </Dots>
+        <ArrowBtn aria-label="Next review" onClick={() => go(1)}>
+          &#8594;
+        </ArrowBtn>
+      </CarouselControls>
+    </Carousel>
+  );
+}
 
 /* ===== DATA ===== */
 const NEWS_ITEMS = [
@@ -794,7 +829,21 @@ const ACTIVITIES = [
     title: 'Forest Sanctuary',
     desc: 'Unwind by the pool, birdwatch, or enjoy a spa treatment at Bayuni.',
   },
+  {
+    category: 'journey',
+    img: img('2025/11/SpecialsBanner.jpg'),
+    alt: 'Bespoke Packages',
+    title: 'Bespoke Journeys',
+    desc: 'Mbano, the Okavango Delta and the Kalahari — one seamless expedition.',
+  },
 ];
+
+const CATEGORY_LABEL = {
+  adventure: 'Adventure',
+  safari: 'Safari',
+  relaxation: 'Relaxation',
+  journey: 'Journeys',
+};
 
 const GALLERY_IMAGES = [
   { src: img('2025/03/MbanoManorSuite-1020-scaled.jpg'), alt: 'Mbano Manor Suite' },
@@ -808,95 +857,132 @@ const GALLERY_IMAGES = [
   { src: img('2025/03/Lobby-garden-2-scaled.jpg'), alt: 'Lobby Garden' },
 ];
 
-const CONSERVATION = [
+const WORLD = [
   {
-    title: 'Forest Preservation',
-    text: 'The hotel was carefully designed around the existing teak forest — only two trees were taken down, with over 80 major trees mapped and preserved. Ancient trees remain the centrepiece of the four-acre sanctuary.',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2L2 7l10 5 10-5-10-5z" />
-        <path d="M2 17l10 5 10-5" />
-        <path d="M2 12l10 5 10-5" />
-      </svg>
-    ),
+    label: 'Conservation & Community',
+    title: 'Rooted in Zimbabwe',
+    text: 'Only two trees were felled to build Mbano. Ancient teak remains the centrepiece of a four-acre sanctuary that employs and uplifts local Zimbabwean talent.',
+    img: img('2025/03/MbanoManorOutside-1026-scaled.jpg'),
+    to: '/mbano-forest',
+    link: 'Discover the Forest',
   },
   {
-    title: 'Local Employment',
-    text: 'From management to gardening, Mbano prioritises Zimbabwean talent. Doc Mati personally mentors young Zimbabweans in hospitality.',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    ),
+    label: 'Recognition',
+    title: "The World's Greatest Places",
+    text: 'Named among Time magazine\u2019s World\u2019s Greatest Places and honoured with Zimbabwe\u2019s Best Boutique Lodge at the AZTA Awards.',
+    img: img('2022/08/VictoriaFalls.jpg'),
+    to: '/media-articles',
+    link: 'All Press & Recognition',
   },
   {
-    title: 'African Ownership',
-    text: 'Proudly black female-owned and independent, Mbano represents a new chapter in African luxury — built by Africans, for the world.',
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
-        <circle cx="12" cy="10" r="3" />
-      </svg>
-    ),
+    label: 'Guest Stories',
+    title: 'A Quiet Little Hideaway',
+    text: 'Guests speak of the warmth of the staff, the beauty of the teak forest, and dinners served beneath a canopy of stars.',
+    img: img('2025/03/Lounge-scaled.jpg'),
+    to: '/guest-reviews',
+    link: 'Read Guest Reviews',
   },
-];
-
-const JOURNEYS = [
-  { id: 'all', label: 'All Experiences' },
-  { id: 'adventure', label: 'Adventure' },
-  { id: 'safari', label: 'Safari' },
-  { id: 'relaxation', label: 'Relaxation' },
 ];
 
 /* ===== PAGE ===== */
 export default function Home() {
-  const [journey, setJourney] = useState('all');
   const [active, setActive] = useState(0);
+  const [timerKey, setTimerKey] = useState(0);
+  const [failed, setFailed] = useState({});
+  const videoRefs = useRef([]);
   const openLightbox = useLightbox();
 
   useEffect(() => {
-    const id = setInterval(() => setActive((a) => (a + 1) % HERO_SLIDES.length), 8000);
+    const id = setInterval(() => setActive((a) => (a + 1) % HERO_VIDEOS.length), 8000);
     return () => clearInterval(id);
-  }, []);
+  }, [timerKey]);
+
+  useEffect(() => {
+    videoRefs.current.forEach((v, i) => {
+      if (!v) return;
+      const shouldPlay = i === active && !failed[i];
+      if (shouldPlay) {
+        const p = v.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      } else {
+        v.pause();
+      }
+    });
+  }, [active, failed]);
+
+  const select = (i) => {
+    if (i === active) return;
+    setActive(i);
+    setTimerKey((k) => k + 1);
+  };
+
+  const openFilm = () => openLightbox(CONTACT.youtube, 'Mbano Manor — The Film', 'video');
+
+  const slide = HERO_VIDEOS[active];
 
   return (
     <>
       <Hero>
-        <HeroSlides>
-          {HERO_SLIDES.map((src, i) => (
-            <HeroSlide key={src} $src={src} $i={i} $active={i === active} />
-          ))}
-        </HeroSlides>
+        {HERO_VIDEOS.map((v, i) =>
+          failed[i] ? (
+            <HeroSlide key={v.src} $src={v.poster} $i={i} $active={i === active} />
+          ) : (
+            <HeroVideo key={v.src} $active={i === active}>
+              <video
+                ref={(el) => {
+                  if (el) {
+                    el.muted = true;
+                    videoRefs.current[i] = el;
+                  } else {
+                    videoRefs.current[i] = null;
+                  }
+                }}
+                src={v.src}
+                poster={v.poster}
+                autoPlay
+                loop
+                playsInline
+                preload="auto"
+                onCanPlay={(e) => {
+                  if (i === active && !failed[i]) e.currentTarget.play();
+                  else e.currentTarget.pause();
+                }}
+                onError={() => setFailed((f) => ({ ...f, [i]: true }))}
+              />
+            </HeroVideo>
+          ),
+        )}
         <HeroOverlay />
         <HeroContent>
-          <HeroEyebrow>Victoria Falls &middot; Zimbabwe</HeroEyebrow>
-          <HeroTitle>
-            A sanctuary hidden
-            <br />
-            <em>within</em> the thundering falls
-          </HeroTitle>
-          <HeroSub>
-            Eighteen luxury suites and a private forest villa, set among ancient teak trees four kilometres from one of the world's greatest wonders.
-          </HeroSub>
+          <HeroText key={active}>
+            <HeroEyebrow>{slide.eyebrow}</HeroEyebrow>
+            <HeroTitle>
+              {slide.title[0]}
+              <br />
+              <em>{slide.title[1]}</em>
+            </HeroTitle>
+            <HeroSub>{slide.sub}</HeroSub>
+          </HeroText>
           <HeroActions>
-            <BtnPrimary as={Link} to="/book-now">
-              Begin Your Stay
-            </BtnPrimary>
-            <BtnOutline as={Link} to="/dr-mati-nyazema-story">
+            <HeroBtnGold to="/book-now">
+              Reserve
+            </HeroBtnGold>
+            <HeroBtnGreen to="/dr-mati-nyazema-story">
               The Mbano Story
-            </BtnOutline>
+            </HeroBtnGreen>
+            <HeroBtnFilm onClick={openFilm}>
+              <PlayIcon />
+              Watch the Film
+            </HeroBtnFilm>
           </HeroActions>
         </HeroContent>
-        <HeroIndicators aria-label="Hero slides">
-          {HERO_SLIDES.map((src, i) => (
+        <HeroIndicators aria-label="Hero scenes">
+          {HERO_VIDEOS.map((v, i) => (
             <HeroIndicator
-              key={src}
+              key={v.src}
               $active={i === active}
-              onClick={() => setActive(i)}
-              aria-label={`Slide ${i + 1}`}
+              onClick={() => select(i)}
+              aria-label={`Scene ${i + 1}`}
             />
           ))}
         </HeroIndicators>
@@ -911,93 +997,27 @@ export default function Home() {
         <Container>
           <Reveal>
             <Manifesto>
+              <SmallCaps $center>Mbano Manor &middot; Victoria Falls</SmallCaps>
               <PullQuote>
                 A dream forged at the foot of the Falls became a sanctuary built for the world — where ancient teak,
                 quiet luxury, and the <em>thunder of the Zambezi</em> keep time together.
               </PullQuote>
-              <Divider $center />
+              <ManifestoLink>
+                <DiscoverLink to="/about-mbano">Discover More</DiscoverLink>
+              </ManifestoLink>
             </Manifesto>
           </Reveal>
         </Container>
       </Section>
 
-      {/* CHAPTER ONE — DISCOVERY */}
-      <Section $pad={120}>
+      {/* STAY */}
+      <Section $pad={130}>
         <Container>
           <Reveal>
-            <SectionHead $center>
-              <ChapterLabel $center>Chapter One &middot; Discovery</ChapterLabel>
-            </SectionHead>
-          </Reveal>
-          <DiscoveryStack>
-            <Reveal delay={0.08}>
-              <DiscoveryStat>
-                <DiscoveryNum>18</DiscoveryNum>
-                <DiscoveryLabel>Private Suites, Hidden in the Teak</DiscoveryLabel>
-              </DiscoveryStat>
-            </Reveal>
-            <Reveal delay={0.2}>
-              <DiscoveryStat>
-                <DiscoveryNum>4</DiscoveryNum>
-                <DiscoveryLabel>Acres of Ancient Forest</DiscoveryLabel>
-              </DiscoveryStat>
-            </Reveal>
-            <Reveal delay={0.32}>
-              <DiscoveryStat>
-                <DiscoveryNum>One</DiscoveryNum>
-                <DiscoveryLabel>Extraordinary Sanctuary</DiscoveryLabel>
-              </DiscoveryStat>
-            </Reveal>
-          </DiscoveryStack>
-        </Container>
-      </Section>
-
-      {/* CHAPTER TWO — THE STORY */}
-      <Section $pad={130} $tint>
-        <Container>
-          <Reveal>
-            <ChapterLabel>Chapter Two &middot; The Story</ChapterLabel>
-          </Reveal>
-          <TwoCol>
-            <Reveal delay={0.05}>
-              <ContentImg>
-                <img src={img('2026/01/Untitled-design-2026-01-25T193718.273-1024x1024.jpg')} alt="Dr Mati Nyazema — Founder of Mbano Manor Hotel" />
-              </ContentImg>
-            </Reveal>
-            <Reveal delay={0.12}>
-              <ContentText>
-                <SectionTitle>A Vision Rooted in Zimbabwe</SectionTitle>
-                <FounderSub>
-                  Built by a Zimbabwean woman determined to create a luxury destination unlike any other.
-                </FounderSub>
-                <Divider />
-                <FounderQuote>
-                  "Zimbabwe deserved a sanctuary that could stand among the world's finest destinations."
-                  <span>Dr Matifadza Martha Nyazema &middot; Founder</span>
-                </FounderQuote>
-                <SectionText>
-                  Decades ago, a young African girl stood before the thundering waterfalls of Victoria Falls and a dream was sparked. That dream is now Mbano Manor Hotel — a bespoke luxury five-star hotel, proudly black female-owned, at the edge of the ancient teak forest.
-                </SectionText>
-                <SectionText>
-                  Founded, built, and managed by Dr Matifadza Martha Nyazema — Mother, Grandmother, Businesswoman &amp; Hotelier — Mbano Manor is a family-owned, independent boutique safari hotel, and a testament to African excellence and visionary hospitality.
-                </SectionText>
-                <StoryCta as={Link} to="/dr-mati-nyazema-story">
-                  Read Doc's Full Story &rarr;
-                </StoryCta>
-              </ContentText>
-            </Reveal>
-          </TwoCol>
-        </Container>
-      </Section>
-
-      {/* CHAPTER THREE — ARRIVAL / STAY */}
-      <Section $pad={130} $deep>
-        <Container>
-          <Reveal>
-            <SectionHead $center>
-              <ChapterLabel $center>Chapter Three &middot; Arrival</ChapterLabel>
-              <SectionTitle $light>A Choice of Sanctuary</SectionTitle>
-              <SectionText $light $mt={16}>
+            <SectionHead>
+              <SmallCaps>Stay</SmallCaps>
+              <SectionTitle>A Choice of Sanctuary</SectionTitle>
+              <SectionText $mt={16}>
                 From private forest suites to an opulent villa, each space is a haven of understated luxury.
               </SectionText>
             </SectionHead>
@@ -1005,139 +1025,81 @@ export default function Home() {
           <StayGrid>
             <Reveal>
               <StayCard to="/luxury-suites">
-                <img src={img('2025/03/Suite-exterior-scaled.jpg')} alt="Luxury Suite" />
-                <StayCardOverlay />
-                <StayCardContent>
-                  <StayCardLabel>18 Luxury Suites</StayCardLabel>
-                  <StayCardTitle>
-                    Effortless Elegance
-                    <br />
-                    Among the Teak
-                  </StayCardTitle>
-                  <StayCardDesc>
+                <StayImage>
+                  <img src={img('2025/03/Suite-exterior-scaled.jpg')} alt="Luxury Suite" fetchPriority="high" />
+                </StayImage>
+                <StayMeta>
+                  <StayLabel>18 Luxury Suites</StayLabel>
+                  <StayTitle>Effortless Elegance Among the Teak</StayTitle>
+                  <StayDesc>
                     45 sqm of tranquil living with a king-sized bed, private courtyard, outdoor shower, and a generous veranda overlooking the forest.
-                  </StayCardDesc>
-                  <StayCardCta>Explore Suites</StayCardCta>
-                </StayCardContent>
+                  </StayDesc>
+                  <DiscoverLink to="/luxury-suites">Explore Suites</DiscoverLink>
+                </StayMeta>
               </StayCard>
             </Reveal>
             <Reveal delay={0.12}>
               <StayCard to="/mutota-forest-villa">
-                <img src={img('2025/01/1.jpg')} alt="Mutota Forest Villa" />
-                <StayCardOverlay />
-                <StayCardContent>
-                  <StayCardLabel>Mutota Forest Villa</StayCardLabel>
-                  <StayCardTitle>
-                    The Ultimate
-                    <br />
-                    Forest Retreat
-                  </StayCardTitle>
-                  <StayCardDesc>
+                <StayImage>
+                  <img src={img('2025/01/1.jpg')} alt="Mutota Forest Villa" fetchPriority="high" />
+                </StayImage>
+                <StayMeta>
+                  <StayLabel>Mutota Forest Villa</StayLabel>
+                  <StayTitle>The Ultimate Forest Retreat</StayTitle>
+                  <StayDesc>
                     200 sqm of pure indulgence with private gardens, plunge pool, two outdoor showers, and 24-hour butler service for up to six guests.
-                  </StayCardDesc>
-                  <StayCardCta>Explore Villa</StayCardCta>
-                </StayCardContent>
+                  </StayDesc>
+                  <DiscoverLink to="/mutota-forest-villa">Explore Villa</DiscoverLink>
+                </StayMeta>
               </StayCard>
             </Reveal>
           </StayGrid>
           <Reveal>
-            <StayFeatures>
-              <StayFeature>
-                <StayFeatureNumber>45</StayFeatureNumber>
-                <StayFeatureLabel>Sqm Suite Space</StayFeatureLabel>
-              </StayFeature>
-              <StayFeature>
-                <StayFeatureNumber>200</StayFeatureNumber>
-                <StayFeatureLabel>Sqm Villa Space</StayFeatureLabel>
-              </StayFeature>
-              <StayFeature>
-                <StayFeatureNumber>24/7</StayFeatureNumber>
-                <StayFeatureLabel>Butler Service</StayFeatureLabel>
-              </StayFeature>
-              <StayFeature>
-                <StayFeatureNumber>4km</StayFeatureNumber>
-                <StayFeatureLabel>From the Falls</StayFeatureLabel>
-              </StayFeature>
-            </StayFeatures>
+            <QuietRow>
+              <span>45</span> Sqm Suite &middot; <span>200</span> Sqm Villa &middot; <span>24/7</span> Butler &middot; <span>4 km</span> From the Falls
+            </QuietRow>
           </Reveal>
         </Container>
       </Section>
 
-      {/* CHAPTER FOUR — BEYOND THE MANOR */}
+      {/* EXPERIENCES */}
       <Section $pad={130}>
         <Container>
           <Reveal>
             <SectionHead>
-              <ChapterLabel>Chapter Four &middot; Beyond the Manor</ChapterLabel>
-              <SectionTitle>Experience Majesty</SectionTitle>
+              <SmallCaps>Experiences</SmallCaps>
+              <SectionTitle>Majesty at the Falls</SectionTitle>
               <SectionText $mt={16}>
                 One of the Seven Natural Wonders of the World — 1,700 metres wide, more than 100 metres deep, and four kilometres from your suite.
               </SectionText>
             </SectionHead>
           </Reveal>
-
-          <JourneySelector>
-            {JOURNEYS.map((j) => (
-              <JourneyBtn key={j.id} $active={journey === j.id} onClick={() => setJourney(j.id)}>
-                {j.label}
-              </JourneyBtn>
-            ))}
-          </JourneySelector>
-
-          <ActivitiesGrid>
-            {ACTIVITIES.map((a) => (
-              <Reveal key={a.title} delay={(ACTIVITIES.indexOf(a) % 3) * 0.08}>
-                <ActivityCard $hidden={journey !== 'all' && a.category !== journey}>
-                  <img src={a.img} alt={a.alt} />
-                  <ActivityCardOverlay />
-                  <ActivityCardContent>
-                    <ActivityCardTitle>{a.title}</ActivityCardTitle>
-                    <ActivityCardDesc>{a.desc}</ActivityCardDesc>
-                  </ActivityCardContent>
-                </ActivityCard>
+          <Rail>
+            {ACTIVITIES.map((a, i) => (
+              <Reveal key={a.title} delay={(i % 3) * 0.06}>
+                <RailCard to={a.category === 'journey' ? '/mbano-packages' : '/victoria-falls'}>
+                  <RailImage>
+                    <img src={a.img} alt={a.alt} loading="lazy" />
+                  </RailImage>
+                  <RailLabel>{CATEGORY_LABEL[a.category]}</RailLabel>
+                  <RailTitle>{a.title}</RailTitle>
+                  <RailDesc>{a.desc}</RailDesc>
+                </RailCard>
               </Reveal>
             ))}
-          </ActivitiesGrid>
-
+          </Rail>
           <Reveal>
-            <ActivityMore>
-              <SectionText style={{ maxWidth: 760, margin: '0 auto 28px' }}>
-                White water rafting in the Zambezi Gorge, bungee jumping from the Victoria Falls Bridge, the Devil's Pool (seasonal), canopy tours over the Batoka Gorge, and guided tours of the Falls from the Zimbabwe or Zambia side.
-              </SectionText>
-              <BtnOutline as={Link} to="/victoria-falls" $dark>
-                Explore All Activities
-              </BtnOutline>
-            </ActivityMore>
+            <div style={{ textAlign: 'center' }}>
+              <DiscoverLink to="/victoria-falls">Explore All Activities</DiscoverLink>
+            </div>
           </Reveal>
         </Container>
       </Section>
 
-      {/* QUOTE BAND */}
-      <QuoteBand $src={img('2022/08/VictoriaFalls.jpg')}>
-        <QuoteBandOverlay />
-        <QuoteBandInner>
-          <Reveal>
-            <QuoteBandText>
-              <em>The Smoke that Thunders</em>
-            </QuoteBandText>
-            <QuoteBandSub>One of the Seven Natural Wonders of the World</QuoteBandSub>
-          </Reveal>
-        </QuoteBandInner>
-      </QuoteBand>
-
-      {/* CHAPTER FIVE — LIFE WITHIN THE FOREST */}
-      <Section $pad={130}>
-        <Container>
-          <Reveal>
-            <SectionHead $center>
-              <ChapterLabel $center>Chapter Five &middot; Life Within the Forest</ChapterLabel>
-              <QuietLine>
-                Luxury Exists In The <em>Quiet</em> Moments.
-              </QuietLine>
-            </SectionHead>
-          </Reveal>
-        </Container>
-      </Section>
+      {/* FULL-BLEED BREAK */}
+      <BreakBand $src={img('2025/03/MbanoManorEvening-1009-scaled.jpg')}>
+        <BreakLabel>One of the Seven Natural Wonders of the World</BreakLabel>
+      </BreakBand>
 
       {/* DINING */}
       <Section $pad={130}>
@@ -1150,17 +1112,17 @@ export default function Home() {
             </Reveal>
             <Reveal delay={0.1}>
               <ContentText>
+                <SmallCaps>Dining</SmallCaps>
                 <SectionTitle>Dine Beneath the Teak Trees</SectionTitle>
-                <Divider />
-                <SectionText>
+                <SectionText $mt={16}>
                   Every meal at Mbano Manor is a celebration of Zimbabwean flavours, crafted with locally sourced ingredients and served wherever you desire — beneath the ancient canopy, on your private veranda, or beneath a canopy of stars.
                 </SectionText>
-                <SectionText>
+                <SectionText $mt={16}>
                   Fine or casual dining on the terrace, in the bar courtyard, in the lounge, or in the comfort of your suite. Dietary requirements — including full Kosher services — are embraced, not endured.
                 </SectionText>
-                <StoryCta as={Link} to="/contact">
-                  Inquire About Dining &rarr;
-                </StoryCta>
+                <div style={{ marginTop: 30 }}>
+                  <DiscoverLink to="/contact">Inquire About Dining</DiscoverLink>
+                </div>
               </ContentText>
             </Reveal>
           </TwoCol>
@@ -1178,90 +1140,13 @@ export default function Home() {
             </Reveal>
             <Reveal delay={0.1}>
               <ContentText>
+                <SmallCaps>Wellness</SmallCaps>
                 <SectionTitle>Wellness in the Forest</SectionTitle>
-                <Divider />
-                <SectionText>
+                <SectionText $mt={16}>
                   Set within the quiet beauty of Mbano's forest sanctuary, Bayuni Spa offers a deeply restorative experience designed to relax the body, calm the mind and rejuvenate the spirit.
                 </SectionText>
-                <SpaTreatments>
-                  <SpaTreatment>
-                    <SpaTreatmentName>Forest Massage</SpaTreatmentName>
-                    <SpaTreatmentPrice>60 min</SpaTreatmentPrice>
-                  </SpaTreatment>
-                  <SpaTreatment>
-                    <SpaTreatmentName>Revitalising Facial</SpaTreatmentName>
-                    <SpaTreatmentPrice>45 min</SpaTreatmentPrice>
-                  </SpaTreatment>
-                  <SpaTreatment>
-                    <SpaTreatmentName>Body Ritual</SpaTreatmentName>
-                    <SpaTreatmentPrice>90 min</SpaTreatmentPrice>
-                  </SpaTreatment>
-                  <SpaTreatment>
-                    <SpaTreatmentName>Couples Journey</SpaTreatmentName>
-                    <SpaTreatmentPrice>120 min</SpaTreatmentPrice>
-                  </SpaTreatment>
-                </SpaTreatments>
-                <StoryCta as={Link} to="/bayuni-spa">
-                  View Spa Menu &rarr;
-                </StoryCta>
-              </ContentText>
-            </Reveal>
-          </TwoCol>
-        </Container>
-      </Section>
-
-      {/* CONSERVATION */}
-      <Section $pad={130}>
-        <Container>
-          <Reveal>
-            <SectionHead $center>
-              <SectionLabel>Conservation &amp; Community</SectionLabel>
-              <SectionTitle>Rooted in Zimbabwe</SectionTitle>
-              <SectionText $mt={16}>
-                Mbano Manor is more than a hotel — it's a commitment to the land, the forest, and the people of Zimbabwe.
-              </SectionText>
-            </SectionHead>
-          </Reveal>
-          <CardGrid>
-            {CONSERVATION.map((c, i) => (
-              <Reveal key={c.title} delay={i * 0.1}>
-                <Card>
-                  <CardIcon>{c.icon}</CardIcon>
-                  <CardTitle>{c.title}</CardTitle>
-                  <CardText>{c.text}</CardText>
-                </Card>
-              </Reveal>
-            ))}
-          </CardGrid>
-        </Container>
-      </Section>
-
-      {/* PACKAGES */}
-      <Section $pad={130} $tint>
-        <Container>
-          <TwoCol>
-            <Reveal>
-              <ContentImg>
-                <img src={img('2025/11/SpecialsBanner.jpg')} alt="Mbano Packages" />
-              </ContentImg>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <ContentText>
-                <SectionTitle>Bespoke Journeys, Curated</SectionTitle>
-                <Divider />
-                <SectionText>
-                  Two nights at Mbano Manor in Zimbabwe's Victoria Falls, four nights at Feline Fields Vintage Camp in the Khwai region of the Delta, and three nights in the Kalahari Desert at Feline Fields Lodge.
-                </SectionText>
-                <SectionText>
-                  Contact our Reservations team on {CONTACT.emailRes} or {CONTACT.mobileRaw} to make your booking.
-                </SectionText>
-                <div style={{ marginTop: 28, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                  <BtnPrimary as={Link} to="/mbano-packages">
-                    View Packages
-                  </BtnPrimary>
-                  <BtnWhatsapp href={CONTACT.whatsappPackages} target="_blank" rel="noopener noreferrer">
-                    Book via WhatsApp
-                  </BtnWhatsapp>
+                <div style={{ marginTop: 30 }}>
+                  <DiscoverLink to="/bayuni-spa">View the Spa Menu</DiscoverLink>
                 </div>
               </ContentText>
             </Reveal>
@@ -1269,53 +1154,68 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* CHAPTER EIGHT — RECOGNITION */}
-      <Section $pad={150} $deep>
+      {/* THE STORY */}
+      <Section $pad={130}>
+        <Container>
+          <TwoCol>
+            <Reveal>
+              <ContentImg>
+                <img src={img('2026/01/Untitled-design-2026-01-25T193718.273-1024x1024.jpg')} alt="Dr Mati Nyazema — Founder of Mbano Manor Hotel" />
+              </ContentImg>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <ContentText>
+                <SmallCaps>Our Story</SmallCaps>
+                <SectionTitle>A Vision Rooted in Zimbabwe</SectionTitle>
+                <SectionText $mt={16}>
+                  Built by a Zimbabwean woman determined to create a luxury destination unlike any other. Founded, built, and managed by Dr Matifadza Martha Nyazema — Mother, Grandmother, Businesswoman &amp; Hotelier.
+                </SectionText>
+                <SectionText $mt={16}>
+                  Proudly black female-owned and independent, Mbano is a family-owned boutique safari hotel and a testament to African excellence.
+                </SectionText>
+                <div style={{ marginTop: 30 }}>
+                  <DiscoverLink to="/dr-mati-nyazema-story">Read Doc's Full Story</DiscoverLink>
+                </div>
+              </ContentText>
+            </Reveal>
+          </TwoCol>
+        </Container>
+      </Section>
+
+      {/* WORLD OF MBANO */}
+      <Section $pad={130}>
         <Container>
           <Reveal>
-            <ChapterLabel>Chapter Eight &middot; Recognition</ChapterLabel>
+            <SectionHead>
+              <SmallCaps>The World of Mbano</SmallCaps>
+              <SectionTitle>Beyond the Sanctuary</SectionTitle>
+            </SectionHead>
           </Reveal>
-          <Reveal delay={0.1}>
-            <AwardsHead>
-              Recognized Among the <span>World's Greatest Places</span>
-            </AwardsHead>
-          </Reveal>
-          <Reveal delay={0.18}>
-            <AwardRow>
-              <AwardName>Time &middot; World's Greatest Places</AwardName>
-              <AwardYear>2025</AwardYear>
-            </AwardRow>
-          </Reveal>
-          <Reveal delay={0.26}>
-            <AwardRow>
-              <AwardName>Best Boutique Lodge in Zimbabwe &middot; AZTA Awards</AwardName>
-              <AwardYear>2024</AwardYear>
-            </AwardRow>
-          </Reveal>
-          <Reveal delay={0.34}>
-            <AwardRow>
-              <AwardName>Tourism Inspiration Award &middot; South Africa</AwardName>
-              <AwardYear>2015</AwardYear>
-            </AwardRow>
-          </Reveal>
-          <Reveal delay={0.42}>
-            <StoryCta as={Link} to="/media-articles">
-              All Press &amp; Recognition &rarr;
-            </StoryCta>
-          </Reveal>
+          <WorldGrid>
+            {WORLD.map((w, i) => (
+              <Reveal key={w.title} delay={i * 0.1}>
+                <WorldCell>
+                  <WorldImage>
+                    <img src={w.img} alt={w.title} loading="lazy" />
+                  </WorldImage>
+                  <WorldLabel>{w.label}</WorldLabel>
+                  <WorldTitle>{w.title}</WorldTitle>
+                  <WorldText>{w.text}</WorldText>
+                  <DiscoverLink to={w.to}>{w.link}</DiscoverLink>
+                </WorldCell>
+              </Reveal>
+            ))}
+          </WorldGrid>
         </Container>
       </Section>
 
       {/* GALLERY */}
-      <Section $pad={130} $deep>
+      <Section $pad={130}>
         <Container>
           <Reveal>
             <SectionHead $center>
-              <SectionLabel>Gallery</SectionLabel>
-              <SectionTitle $light>The Mbano Light</SectionTitle>
-              <StoryCta as={Link} to="/gallery">
-                View Full Gallery &rarr;
-              </StoryCta>
+              <SmallCaps $center>Gallery</SmallCaps>
+              <SectionTitle>The Mbano Light</SectionTitle>
             </SectionHead>
           </Reveal>
         </Container>
@@ -1332,46 +1232,19 @@ export default function Home() {
               </Reveal>
             ))}
           </GalleryGrid>
-        </Container>
-      </Section>
-
-      {/* CHAPTER NINE — GUEST STORIES */}
-      <Section $pad={130}>
-        <Container>
-          <TwoCol>
-            <Reveal>
-              <VideoBlock>
-                <video src={VIDEO_TESTIMONIAL} controls playsInline />
-              </VideoBlock>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <ContentText>
-                <ChapterLabel>Chapter Nine &middot; Guest Stories</ChapterLabel>
-                <SectionTitle>A Little Hideaway Near Victoria Falls</SectionTitle>
-                <VoiceQuote>
-                  "Staying at Mbano Manor felt like finding a quiet little hideaway near Victoria Falls."
-                </VoiceQuote>
-                <SectionText>
-                  Guests consistently praise the warmth of the staff, the beauty of the forest setting, and the exceptional food.
-                </SectionText>
-                <StoryCta as={Link} to="/guest-reviews">
-                  Read Guest Reviews &rarr;
-                </StoryCta>
-              </ContentText>
-            </Reveal>
-          </TwoCol>
+          <div style={{ textAlign: 'center', marginTop: 56 }}>
+            <DiscoverLink to="/gallery">View Full Gallery</DiscoverLink>
+          </div>
         </Container>
       </Section>
 
       {/* LATEST NEWS */}
-      <Section $tint>
+      <Section $pad={130} $tint>
         <Container>
           <Reveal>
             <SectionHead>
+              <SmallCaps>Journal</SmallCaps>
               <SectionTitle>Mbano in the Spotlight</SectionTitle>
-              <StoryCta as={Link} to="/latest-news">
-                All News &rarr;
-              </StoryCta>
             </SectionHead>
           </Reveal>
           <Reveal>
@@ -1386,10 +1259,33 @@ export default function Home() {
               ))}
             </NewsStrip>
           </Reveal>
+          <Reveal>
+            <div style={{ marginTop: 28 }}>
+              <DiscoverLink to="/latest-news">All News</DiscoverLink>
+            </div>
+          </Reveal>
         </Container>
       </Section>
 
       <ContactSection />
+
+      {/* GUEST REVIEWS CAROUSEL */}
+      <Section $pad={130} $tint>
+        <Container>
+          <Reveal>
+            <SectionHead $center>
+              <SmallCaps $center>Guest Reviews</SmallCaps>
+              <SectionTitle>Words From Our Guests</SectionTitle>
+            </SectionHead>
+          </Reveal>
+          <ReviewsCarousel />
+          <Reveal>
+            <div style={{ textAlign: 'center', marginTop: 56 }}>
+              <DiscoverLink to="/guest-reviews">Read All Reviews</DiscoverLink>
+            </div>
+          </Reveal>
+        </Container>
+      </Section>
 
       {/* FINAL SCENE */}
       <CtaBanner>
@@ -1397,11 +1293,11 @@ export default function Home() {
           <ClosingLine>Some places are visited. Others are remembered forever.</ClosingLine>
           <h2>Your Mbano Story Awaits</h2>
           <p>
-            An intimate five-star sanctuary hidden within Victoria Falls. Check-in from {CONTACT.checkIn}, checkout at {CONTACT.checkOut} — early arrivals and late departures are accommodated subject to availability.
+            An intimate five-star sanctuary hidden within Victoria Falls. Check-in from {CONTACT.checkIn}, checkout at {CONTACT.checkOut}.
           </p>
           <CtaActions>
             <BtnPrimary as={Link} to="/book-now">
-              Begin Your Stay
+              Reserve
             </BtnPrimary>
             <BtnWhatsapp href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">
               WhatsApp Reservations

@@ -348,6 +348,7 @@ export default function MbanoPackages() {
                 <img
                   src="https://www.mbanomanorhotel.com/wp-content/uploads/2025/11/SpecialsBanner.jpg"
                   alt="Mbano Manor Hotel specials"
+                  fetchPriority="high"
                 />
               </ContentImg>
               <ContentText>
