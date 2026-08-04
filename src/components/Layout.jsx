@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import ScrollToTop from './ScrollToTop';
 import FilmIntro from './FilmIntro';
+import AiConcierge from './AiConcierge';
 
 const Main = styled.main`
   min-height: 100vh;
@@ -19,6 +20,7 @@ export default function Layout() {
         <Outlet />
       </Main>
       <Footer />
+      <AiConcierge />
       <FilmIntro show={pathname === '/'} />
     </>
   );

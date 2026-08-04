@@ -30,13 +30,20 @@ import { HERO_VIDEOS, CONTACT, img } from '../data/site';
 const Hero = styled.section`
   position: relative;
   height: 100vh;
-  min-height: 680px;
+  height: 100dvh;
+  min-height: 640px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   @media (max-width: 768px) {
-    min-height: 620px;
+    min-height: 540px;
+  }
+  @media (max-height: 600px) {
+    height: auto;
+    min-height: 100dvh;
+    padding: 120px 0 72px;
+    align-items: flex-start;
   }
 `;
 
@@ -74,13 +81,20 @@ const HeroText = styled.div``;
 const HeroOverlay = styled.div`
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(14, 52, 54, 0.45) 0%,
-    rgba(14, 52, 54, 0.18) 45%,
-    rgba(10, 40, 42, 0.55) 82%,
-    rgba(14, 52, 54, 0.82) 100%
-  );
+  z-index: 1;
+  background:
+    radial-gradient(
+      120% 90% at 50% 18%,
+      rgba(14, 52, 54, 0.12) 0%,
+      rgba(14, 52, 54, 0.38) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 40, 42, 0.62) 0%,
+      rgba(14, 52, 54, 0.18) 40%,
+      rgba(14, 52, 54, 0.42) 75%,
+      rgba(7, 27, 29, 0.88) 100%
+    );
 `;
 
 const HeroContent = styled.div`
@@ -128,6 +142,9 @@ const HeroTitle = styled.h1`
   }
   ${rise}
   animation-delay: 0.55s;
+  @media (max-width: 768px) {
+    font-size: clamp(34px, 9vw, 48px);
+  }
 `;
 
 const HeroSub = styled.p`
@@ -150,6 +167,10 @@ const HeroActions = styled.div`
   margin-top: 42px;
   ${rise}
   animation-delay: 0.95s;
+  @media (max-width: 768px) {
+    gap: 12px;
+    margin-top: 32px;
+  }
 `;
 
 const heroBtn = css`
@@ -679,6 +700,8 @@ const CarouselControls = styled.div`
   justify-content: center;
   gap: 20px;
   margin-top: 44px;
+  flex-wrap: wrap;
+  max-width: 100%;
 `;
 
 const ArrowBtn = styled.button`
@@ -705,6 +728,9 @@ const Dots = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  @media (max-width: 520px) {
+    display: none;
+  }
 `;
 
 const Dot = styled.button`
@@ -836,6 +862,13 @@ const ACTIVITIES = [
     title: 'Bespoke Journeys',
     desc: 'Mbano, the Okavango Delta and the Kalahari — one seamless expedition.',
   },
+  {
+    category: 'adventure',
+    img: img('2023/07/SW-Rafting_5.jpg'),
+    alt: 'White Water Rafting on the Zambezi',
+    title: 'White Water Rafting',
+    desc: 'Tackle world-class rapids through the dramatic Batoka Gorge below the Falls.',
+  },
 ];
 
 const CATEGORY_LABEL = {
@@ -902,6 +935,7 @@ export default function Home() {
       if (!v) return;
       const shouldPlay = i === active && !failed[i];
       if (shouldPlay) {
+        if (v.readyState === 0) v.load();
         const p = v.play();
         if (p && typeof p.catch === 'function') p.catch(() => {});
       } else {
@@ -939,10 +973,12 @@ export default function Home() {
                 }}
                 src={v.src}
                 poster={v.poster}
+                muted
                 autoPlay
                 loop
                 playsInline
-                preload="auto"
+                preload={i === active ? 'auto' : 'none'}
+                fetchPriority={i === 0 ? 'high' : 'auto'}
                 onCanPlay={(e) => {
                   if (i === active && !failed[i]) e.currentTarget.play();
                   else e.currentTarget.pause();
@@ -1026,7 +1062,7 @@ export default function Home() {
             <Reveal>
               <StayCard to="/luxury-suites">
                 <StayImage>
-                  <img src={img('2025/03/Suite-exterior-scaled.jpg')} alt="Luxury Suite" fetchPriority="high" />
+                  <img src={img('2025/03/Suite-exterior-scaled.jpg')} alt="Luxury Suite" loading="lazy" decoding="async" />
                 </StayImage>
                 <StayMeta>
                   <StayLabel>18 Luxury Suites</StayLabel>
@@ -1041,7 +1077,7 @@ export default function Home() {
             <Reveal delay={0.12}>
               <StayCard to="/mutota-forest-villa">
                 <StayImage>
-                  <img src={img('2025/01/1.jpg')} alt="Mutota Forest Villa" fetchPriority="high" />
+                  <img src={img('2025/01/1.jpg')} alt="Mutota Forest Villa" loading="lazy" decoding="async" />
                 </StayImage>
                 <StayMeta>
                   <StayLabel>Mutota Forest Villa</StayLabel>
@@ -1079,7 +1115,7 @@ export default function Home() {
               <Reveal key={a.title} delay={(i % 3) * 0.06}>
                 <RailCard to={a.category === 'journey' ? '/mbano-packages' : '/victoria-falls'}>
                   <RailImage>
-                    <img src={a.img} alt={a.alt} loading="lazy" />
+                    <img src={a.img} alt={a.alt} loading="lazy" decoding="async" />
                   </RailImage>
                   <RailLabel>{CATEGORY_LABEL[a.category]}</RailLabel>
                   <RailTitle>{a.title}</RailTitle>
@@ -1089,7 +1125,7 @@ export default function Home() {
             ))}
           </Rail>
           <Reveal>
-            <div style={{ textAlign: 'center' }}>
+            <div style={{ textAlign: 'center', marginTop: 72 }}>
               <DiscoverLink to="/victoria-falls">Explore All Activities</DiscoverLink>
             </div>
           </Reveal>
@@ -1107,7 +1143,7 @@ export default function Home() {
           <TwoCol>
             <Reveal>
               <ContentImg>
-                <img src={img('2025/03/MbanoMorningEdit-1036-scaled.jpg')} alt="Dining at Mbano Manor" />
+                <img src={img('2025/03/MbanoMorningEdit-1036-scaled.jpg')} alt="Dining at Mbano Manor" loading="lazy" decoding="async" />
               </ContentImg>
             </Reveal>
             <Reveal delay={0.1}>
@@ -1135,7 +1171,7 @@ export default function Home() {
           <TwoCol $reverse>
             <Reveal>
               <ContentImg>
-                <img src={img('2025/09/BayuniSpa.jpg')} alt="Bayuni Spa" />
+                <img src={img('2025/09/BayuniSpa.jpg')} alt="Bayuni Spa" loading="lazy" decoding="async" />
               </ContentImg>
             </Reveal>
             <Reveal delay={0.1}>
@@ -1160,7 +1196,7 @@ export default function Home() {
           <TwoCol>
             <Reveal>
               <ContentImg>
-                <img src={img('2026/01/Untitled-design-2026-01-25T193718.273-1024x1024.jpg')} alt="Dr Mati Nyazema — Founder of Mbano Manor Hotel" />
+                <img src={img('2026/01/Untitled-design-2026-01-25T193718.273-1024x1024.jpg')} alt="Dr Mati Nyazema — Founder of Mbano Manor Hotel" loading="lazy" decoding="async" />
               </ContentImg>
             </Reveal>
             <Reveal delay={0.1}>
@@ -1196,7 +1232,7 @@ export default function Home() {
               <Reveal key={w.title} delay={i * 0.1}>
                 <WorldCell>
                   <WorldImage>
-                    <img src={w.img} alt={w.title} loading="lazy" />
+                    <img src={w.img} alt={w.title} loading="lazy" decoding="async" />
                   </WorldImage>
                   <WorldLabel>{w.label}</WorldLabel>
                   <WorldTitle>{w.title}</WorldTitle>
@@ -1224,7 +1260,7 @@ export default function Home() {
             {GALLERY_IMAGES.map((g, i) => (
               <Reveal key={g.src} delay={(i % 4) * 0.08}>
                 <GalleryItem onClick={() => openLightbox(g.src, g.alt)}>
-                  <img src={g.src} alt={g.alt} loading="lazy" />
+                  <img src={g.src} alt={g.alt} loading="lazy" decoding="async" />
                   <GalleryOverlay>
                     <GalleryItemIcon>&#8599;</GalleryItemIcon>
                   </GalleryOverlay>

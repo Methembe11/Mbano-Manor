@@ -28,7 +28,7 @@ export default function VirtualTour() {
           </Reveal>
           <Reveal delay={0.1}>
             <MediaFrame $ratio="16/9">
-              <video src={VIDEO_LOOP} controls playsInline />
+              <video src={VIDEO_LOOP} controls playsInline muted autoPlay loop />
             </MediaFrame>
           </Reveal>
           <Reveal delay={0.2}>
@@ -51,7 +51,7 @@ export default function VirtualTour() {
           </Reveal>
           <Reveal delay={0.1}>
             <MediaFrame $ratio="16/9">
-              <video src={VIDEO_TESTIMONIAL} controls playsInline />
+              <video src={VIDEO_TESTIMONIAL} controls playsInline muted autoPlay />
             </MediaFrame>
           </Reveal>
           <Reveal delay={0.2}>

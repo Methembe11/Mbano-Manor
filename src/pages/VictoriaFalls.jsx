@@ -79,12 +79,12 @@ const FALLS_GALLERY = [
 
 const MapGrid = styled.div`
   display: grid;
-  grid-template-columns: 1.25fr 1fr;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
   gap: 40px;
   align-items: stretch;
   margin-top: 16px;
   @media (max-width: 960px) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 `;
 

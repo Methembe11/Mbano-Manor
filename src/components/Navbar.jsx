@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { NavLink, Link } from 'react-router-dom';
 import { NAV, LOGO } from '../data/site';
 
@@ -166,15 +166,19 @@ const MobileToggle = styled.button`
   flex-direction: column;
   gap: 5px;
   cursor: pointer;
-  padding: 8px;
+  padding: 10px;
+  margin: -10px;
   background: none;
   border: none;
   z-index: 1100;
+  -webkit-tap-highlight-color: transparent;
   span {
     width: 26px;
     height: 1px;
     background: ${({ $open, theme }) => ($open ? theme.colors.ivory : theme.colors.ink)};
-    transition: all 0.35s ease;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      background 0.35s ease;
     ${({ $open }) =>
       $open &&
       css`
@@ -189,16 +193,40 @@ const MobileToggle = styled.button`
 `;
 
 /* ===== FULL-SCREEN MOBILE MENU ===== */
+const itemIn = keyframes`
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
 const MobileMenu = styled.div`
   position: fixed;
   inset: 0;
   z-index: 1050;
+  height: 100vh;
+  height: 100dvh;
   background: ${({ theme }) => theme.colors.tealDeep};
-  display: ${({ $open }) => ($open ? 'flex' : 'none')};
+  display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 90px 40px 48px;
+  padding: 96px 34px 44px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  opacity: ${({ $open }) => ($open ? 1 : 0)};
+  visibility: ${({ $open }) => ($open ? 'visible' : 'hidden')};
+  pointer-events: ${({ $open }) => ($open ? 'auto' : 'none')};
+  transform: ${({ $open }) => ($open ? 'translateY(0)' : 'translateY(-26px)')};
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.5s;
+  @media (max-width: 768px) {
+    padding: 84px 26px 40px;
+  }
+`;
+
+const MobileInner = styled.div`
+  width: 100%;
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
 `;
 
 const MobileLinks = styled.ul`
@@ -207,12 +235,19 @@ const MobileLinks = styled.ul`
 `;
 
 const MobileItem = styled.li`
+  ${({ $open, $i }) =>
+    $open &&
+    css`
+      animation: ${itemIn} 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: ${($i ?? 0) * 70}ms;
+    `}
   > a {
     display: block;
-    padding: 15px 0;
+    padding: 13px 0 4px;
     font-family: ${({ theme }) => theme.fonts.display};
-    font-size: clamp(28px, 7vw, 40px);
+    font-size: clamp(26px, 7vw, 40px);
     font-weight: 400;
+    line-height: 1.15;
     color: ${({ theme }) => theme.colors.ivory};
     transition: color 0.3s ease;
     &:hover { color: ${({ theme }) => theme.colors.gold}; }
@@ -223,11 +258,17 @@ const MobileSub = styled.ul`
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 0 0 10px;
+  gap: 7px;
+  padding: 6px 0 14px;
+  ${({ $open, $i }) =>
+    $open &&
+    css`
+      animation: ${itemIn} 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: ${($i ?? 0) * 70 + 60}ms;
+    `}
   a {
     display: block;
-    padding: 4px 0;
+    padding: 3px 0;
     font-family: ${({ theme }) => theme.fonts.ui};
     font-size: 10px;
     letter-spacing: 2.5px;
@@ -240,8 +281,8 @@ const MobileSub = styled.ul`
 
 const MobileCta = styled(Link)`
   display: inline-block;
-  margin: 44px auto 0;
-  padding: 14px 46px;
+  margin: 34px auto 0;
+  padding: 15px 46px;
   font-family: ${({ theme }) => theme.fonts.ui};
   font-size: 10px;
   font-weight: 500;
@@ -254,6 +295,11 @@ const MobileCta = styled(Link)`
   &:hover {
     background: ${({ theme }) => theme.colors.bronze};
   }
+  ${({ $open }) =>
+    $open &&
+    css`
+      animation: ${itemIn} 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+    `}
 `;
 
 function NavItemRow({ item }) {
@@ -297,6 +343,15 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
   return (
     <Nav $scrolled={scrolled || menuOpen}>
       <NavLogo to="/" $dark={scrolled || menuOpen}>
@@ -313,7 +368,9 @@ export default function Navbar() {
 
       <MobileToggle
         $open={menuOpen}
-        aria-label="Toggle navigation"
+        aria-expanded={menuOpen}
+        aria-controls="mobile-menu"
+        aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
         onClick={() => setMenuOpen((o) => !o)}
       >
         <span />
@@ -321,30 +378,32 @@ export default function Navbar() {
         <span />
       </MobileToggle>
 
-      <MobileMenu $open={menuOpen}>
-        <MobileLinks>
-          {NAV.map((item) => (
-            <MobileItem key={item.label}>
-              <NavLink to={item.to} onClick={() => setMenuOpen(false)} end={item.to === '/'}>
-                {item.label}
-              </NavLink>
-              {item.dropdown && (
-                <MobileSub>
-                  {item.dropdown.map((sub) => (
-                    <li key={sub.to}>
-                      <NavLink to={sub.to} onClick={() => setMenuOpen(false)}>
-                        {sub.label}
-                      </NavLink>
-                    </li>
-                  ))}
-                </MobileSub>
-              )}
-            </MobileItem>
-          ))}
-        </MobileLinks>
-        <MobileCta to="/book-now" onClick={() => setMenuOpen(false)}>
-          Reserve
-        </MobileCta>
+      <MobileMenu id="mobile-menu" $open={menuOpen} role="dialog" aria-label="Menu">
+        <MobileInner>
+          <MobileLinks>
+            {NAV.map((item, i) => (
+              <MobileItem key={item.label} $open={menuOpen} $i={i}>
+                <NavLink to={item.to} onClick={() => setMenuOpen(false)} end={item.to === '/'}>
+                  {item.label}
+                </NavLink>
+                {item.dropdown && (
+                  <MobileSub $open={menuOpen} $i={i}>
+                    {item.dropdown.map((sub) => (
+                      <li key={sub.to}>
+                        <NavLink to={sub.to} onClick={() => setMenuOpen(false)}>
+                          {sub.label}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </MobileSub>
+                )}
+              </MobileItem>
+            ))}
+          </MobileLinks>
+          <MobileCta to="/book-now" $open={menuOpen} onClick={() => setMenuOpen(false)}>
+            Reserve
+          </MobileCta>
+        </MobileInner>
       </MobileMenu>
     </Nav>
   );
